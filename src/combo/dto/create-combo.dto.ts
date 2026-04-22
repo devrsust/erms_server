@@ -1,36 +1,44 @@
-import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator"
+// create-combo.dto.ts
+import { IsString, IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
 
 export class CreateComboDto {
+  @IsString()
+  @IsNotEmpty()
+  name: string;
 
-    @IsString()
-    @IsNotEmpty()
-    firstname: string
+  @IsString()
+  @IsNotEmpty()
+  matric_number: string;
 
-    @IsString()
-    @IsOptional()
-    middlename?: string
+  @IsString()
+  @IsNotEmpty()
+  class: string;
 
-    @IsString()
-    @IsNotEmpty()
-    lastname: string
+  @IsString()
+  @IsNotEmpty()
+  certNo: string;
 
-    @IsString()
-    @IsNotEmpty()
-    matric_number: string
+  @IsString()
+  @IsNotEmpty()
+  type: string;
 
-    @IsString()
-    @IsNotEmpty()
-    email: string
+  @IsString()
+  @IsNotEmpty()
+  year: string;
 
-    @IsString()
-    @IsNotEmpty()
-    phone_number: string
+  @IsString()
+  @IsNotEmpty()
+  remark: string;
 
-    @IsBoolean()
-    @IsNotEmpty()
-    isPrinted: boolean
+  @IsString()
+  @IsNotEmpty()
+  session: string;
 
-    @IsNumber()
-    @IsNotEmpty()
-    createdById: number
+  @IsString()
+  @IsNotEmpty()
+  print_date: string;
+
+  @IsNumber()
+  @IsOptional()
+  createdById?: number;
 }

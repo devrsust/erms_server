@@ -75,7 +75,7 @@ export class PaystackService {
       data: {
         email: data.email,
         amount: data.amount,
-        subaccount: data.subaccount || gateway.subaccount || undefined,
+        // subaccount: data.subaccount || gateway.subaccount || undefined,
         transaction_charge: data.transaction_charge,
         callback_url: data.callback_url || gateway.callback_url || undefined,
         reference: data.reference,

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe } from '@nestjs/common';
 import { RequestService } from './request.service';
 import { CreateRequestDto } from './dto/create-request.dto';
 import { UpdateRequestDto } from './dto/update-request.dto';
@@ -21,7 +21,7 @@ export class RequestController {
 
   @Get("user/:userId")
   findAllByUser(@Param("userId") userId: number) {
-    return this.requestService.findAllByUser(+userId);
+    return this.requestService.findAllByUser(userId);
   }
 
   @Get(':id')
@@ -29,6 +29,15 @@ export class RequestController {
     return this.requestService.findOne(+id);
   }
 
+  @Get('admin/:id')
+  findOneByAdmin(@Param('id', ParseIntPipe) id: number) {
+    return this.requestService.findOneByAdmins(id);
+  }
+
+  @Get('pending/:userId')
+  getPendingApprovals(@Param('userId', ParseIntPipe) userId: number) {
+    return this.requestService.getPendingApprovals(userId);
+  }
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateRequestDto: UpdateRequestDto) {
     return this.requestService.update(+id, updateRequestDto);

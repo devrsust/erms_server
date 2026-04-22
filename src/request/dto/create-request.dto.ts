@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { IsNotEmpty, IsNumber, IsString, ValidateIf } from "class-validator";
 
 export class CreateRequestDto {
     @ApiProperty({
@@ -11,27 +11,40 @@ export class CreateRequestDto {
     userId: number;
 
     @ApiProperty({
-        description: "Email of the user making the request",
+        description: "Requested document ID",
+        example: 5,
     })
-    @IsString()
-    @IsNotEmpty({ message: "Email is required" })
-    email: string;
+    @IsNumber()
+    @IsNotEmpty({ message: "Document ID is required" })
+    documentId: number;
 
     @ApiProperty({
         description: "Request type (internal, external_local, external_foreign)",
         example: "internal",
+        enum: ['internal', 'external']
     })
     @IsString()
-    @IsNotEmpty({ message: "Request type is required" })
+    @IsNotEmpty()
     type: string;
 
+    @ApiProperty({ required: false })
+    @ValidateIf(o => o.type === 'external')
+    @IsString()
+    @IsNotEmpty({ message: 'Email is required for external requests' })
+    email?: string;
+
+    @ApiProperty({ required: false })
+    @ValidateIf(o => o.type === 'internal')
+    @IsString()
+    @IsNotEmpty({ message: 'Faculty ID is required for internal requests' })
+    facultyId?: string;
+
     @ApiProperty({
-        description: "Destination (faculty ID or email)",
-        example: "faculty_3 OR destination@email.com",
+        description: "Address of the user making the request",
     })
     @IsString()
-    @IsNotEmpty({ message: "Destination is required" })
-    destination: string;
+    @IsNotEmpty({ message: "Address is required" })
+    address: string;
 
     @ApiProperty({
         description: "Payment or request reference number",
@@ -40,12 +53,4 @@ export class CreateRequestDto {
     @IsString()
     @IsNotEmpty({ message: "Reference number is required" })
     reference_number: string;
-
-    @ApiProperty({
-        description: "Requested document ID",
-        example: 5,
-    })
-    @IsNumber()
-    @IsNotEmpty({ message: "Document ID is required" })
-    documentId: number;
 }

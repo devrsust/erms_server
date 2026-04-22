@@ -7,8 +7,8 @@
   import * as bcrypt from 'bcrypt'
   import * as crypto from "node:crypto";
   import ms from "ms";
-  import { Alumni, User } from 'generated/prisma/client';
   import axios from 'axios';
+import { Alumni, User } from 'generated/prisma/client';
 
 
   @Injectable()

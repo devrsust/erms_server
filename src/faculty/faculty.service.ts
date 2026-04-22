@@ -25,6 +25,13 @@ export class FacultyService {
         select: {
           id: true,
           name: true,
+          createdAt: true,
+          createdBy: {
+            select: {
+              id: true,
+              email: true
+            }
+          },
           _count: {
             select: {
               departments: true
@@ -79,15 +86,103 @@ export class FacultyService {
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} faculty`;
+  async findOne(id: number) {
+    try {
+      const faculty = await this.prisma.faculty.findUnique({
+        where: { id },
+        select: {
+          id: true,
+          name: true,
+          createdBy: {
+            select: {
+              id: true,
+              email: true,
+            },
+          },
+          createdAt: true,
+        },
+      });
+
+      if (!faculty) {
+        return {
+          status: 404,
+          message: `Faculty with ID ${id} not found.`,
+        };
+      }
+
+      return {
+        status: 200,
+        message: 'Faculty retrieved successfully',
+        data: faculty,
+      };
+    } catch (error) {
+      return {
+        status: 500,
+        message: `An error occurred: ${error.message || error}`,
+      };
+    }
   }
 
-  update(id: number, updateFacultyDto: UpdateFacultyDto) {
-    return `This action updates a #${id} faculty`;
+  async update(id: number, dto: UpdateFacultyDto) {
+    try {
+      const existing = await this.prisma.faculty.findUnique({ where: { id } });
+      if (!existing) {
+        return {
+          status: 404,
+          message: `Faculty with ID ${id} not found.`,
+        };
+      }
+
+      const updatedFaculty = await this.prisma.faculty.update({
+        where: { id },
+        data: dto,
+        select: {
+          id: true,
+          name: true,
+          createdBy: {
+            select: {
+              id: true,
+              email: true,
+            },
+          },
+          createdAt: true, // include for consistency
+        },
+      });
+
+      return {
+        status: 200,
+        message: 'Faculty updated successfully',
+        data: updatedFaculty,
+      };
+    } catch (error) {
+      return {
+        status: 500,
+        message: `An error occurred: ${error.message || error}`,
+      };
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} faculty`;
+  async remove(id: number) {
+    try {
+      const faculty = await this.prisma.faculty.findUnique({ where: { id } });
+
+      if (!faculty) {
+        return {
+          status: 404,
+          message: `Faculty ${id} not fount.`
+        }
+      }
+
+      await this.prisma.faculty.delete({ where: { id } });
+      return {
+        status: 200,
+        message: `Faculty ${id} deleted`
+      }
+    } catch (error) {
+      return {
+        status: 500,
+        message: `An error Occured: ${error}`
+      }
+    }
   }
 }

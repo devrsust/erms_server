@@ -1,4 +1,3 @@
-import { Payload } from './../../generated/prisma/internal/prismaNamespace';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import { UpdatePaymentDto } from './dto/update-payment.dto';

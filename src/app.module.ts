@@ -15,10 +15,10 @@ import { FacultyModule } from './faculty/faculty.module';
 import { DepartmentModule } from './department/department.module';
 import { RequestModule } from './request/request.module';
 import { AlumniModule } from './alumni/alumni.module';
-import { TemplateModule } from './template/template.module';
-import { ComponentsModule } from './components/components.module';
-import { BlockModule } from './block/block.module';
 import { ComboModule } from './combo/combo.module';
+import { ApprovalChainModule } from './approval-chain/approval-chain.module';
+import { ApprovalModule } from './approval/approval.module';
+import { CommentModule } from './comment/comment.module';
 
 @Module({
   imports: [
@@ -37,10 +37,10 @@ import { ComboModule } from './combo/combo.module';
     DepartmentModule,
     RequestModule,
     AlumniModule,
-    TemplateModule,
-    ComponentsModule,
-    BlockModule,
     ComboModule,
+    ApprovalChainModule,
+    ApprovalModule,
+    CommentModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

@@ -1,7 +1,11 @@
-import { Injectable } from '@nestjs/common';
+// document.service.ts
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
 import { CreateDocumentDto } from './dto/create-document.dto';
 import { UpdateDocumentDto } from './dto/update-document.dto';
-import { PrismaService } from '../prisma/prisma.service';
+import { DocumentResponseDto } from './dto/document-response.dto';
+import { paginate, searchQuery } from 'src/common/utils/query.util';
+import { FindAllDocumentsQueryDto } from './dto/find-all.dto';
 
 @Injectable()
 export class DocumentService {
@@ -9,197 +13,264 @@ export class DocumentService {
 
   async create(dto: CreateDocumentDto) {
     try {
+      // Validate user permissions
       const user = await this.prisma.user.findUnique({
         where: { id: dto.createdById },
-        select: {
-          id: true
-        }
-      })
+        select: { role: { select: { name: true } } },
+      });
 
-      if (!user) {
+      if (!user || !['Super Admin', 'Admin'].includes(user.role?.name || '')) {
+        return { status: 403, message: 'You are not authorized to create documents' };
+      }
+
+      // Validate approval chain if provided
+      const approvalChain = await this.prisma.approvalChain.findUnique({
+        where: { id: dto.approvalChainId },
+      });
+      if (!approvalChain) {
         return {
           status: 404,
-          message: `User ${dto.createdById} not found.`
-        }
+          message: `Approval chain with ID ${dto.approvalChainId} not found`,
+        };
       }
 
-      const existing = await this.prisma.document.findUnique({
-        where: { title: dto.title },
-        select: {
-          id: true
-        }
-      })
+      // Compute total amount
+      const totalAmount = dto.price + dto.processingFee;
 
-      if (existing) {
-        return {
-          status: 200,
-          message: `Document ${dto.title} already exist.`
-        }
-      }
-
+      // Create the document
       const document = await this.prisma.document.create({
         data: {
           title: dto.title,
-          status: dto.status,
-          price: Number(dto.price),
-          processingFee: Number(dto.processingFee),
-          totalAmount: Number(dto.totalAmount),
           description: dto.description,
-          createdById: dto.createdById
+          status: dto.status,
+          price: dto.price,
+          processingFee: dto.processingFee,
+          totalAmount,
+          createdById: Number(dto.createdById),
+          approvalChainId: dto.approvalChainId || null,
         },
         select: {
           id: true,
-          title: true,
-          status: true,
-          totalAmount: true,
-          createdBy: {
-            select: {
-              id: true,
-              email: true
-            }
-          },
-          createdAt: true,
-        }
-      })
-
-      return {
-        status: 201,
-        data: document
-      }
-
-    } catch (error) {
-      return {
-        status: 500,
-        message: `An error occured ${error}`
-      }
-    }
-  }
-
-  async findAll() {
-    try {
-      const documents = await this.prisma.document.findMany({
-        select: {
-          id: true,
-          title: true,
-          status: true,
           description: true,
           totalAmount: true,
           createdBy: {
             select: {
               id: true,
-              firstname: true,
-              lastname: true,
-              email: true
-            }
+              email: true,
+            },
           },
           createdAt: true,
-          updatedAt: true
-        }
+        },
       });
+
       return {
-        status: 200,
-        data: documents
-      }
+        status: 201,
+        message: 'Document created successfully',
+        data: document,
+      };
     } catch (error) {
       return {
         status: 500,
-        message: `An error occured ${error}`
-      }
+        message: `An error occurred: ${error.message || error}`,
+      };
+    }
+  }
+
+  async findAll(query: FindAllDocumentsQueryDto) {
+    try {
+      const page = Number(query.page) || 1;
+      const limit = Number(query.limit) || 20;
+      const search = query.search?.trim() || '';
+
+      const { skip, take } = paginate(page, limit);
+      const where = searchQuery(search, ['title', 'description']) ?? {};
+
+      const [items, total] = await Promise.all([
+        this.prisma.document.findMany({
+          where,
+          skip,
+          take,
+          select: {
+            id: true,
+            title: true,
+            totalAmount: true,
+            createdBy: {
+              select: {
+                id: true,
+                email: true,
+              },
+            },
+            approvalChain: {
+              select: {
+                id: true,
+                steps: true,
+              },
+            },
+            createdAt: true,
+          },
+          orderBy: { createdAt: 'desc' },
+        }),
+        this.prisma.document.count({ where }),
+      ]);
+
+      const totalPages = Math.ceil(total / (limit || 1));
+
+      return {
+        page,
+        limit,
+        total,
+        totalPages,
+        data: items,
+      };
+    } catch (error) {
+      return {
+        status: 500,
+        message: `An error occurred: ${error.message || error}`,
+      };
     }
   }
 
   async findOne(id: number) {
-    try {
-      const existingDoc = await this.prisma.document.findUnique({
-        where: { id: id },
-        select: {
-          id: true,
-          title: true,
-          status: true,
-          description: true,
-          totalAmount: true,
-          createdBy: {
-            select: {
-              id: true,
-              firstname: true,
-              lastname: true,
-              email: true
-            }
+    const document = await this.prisma.document.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        title: true,
+        status: true,
+        price: true,
+        processingFee: true,
+        totalAmount: true,
+        createdAt: true,
+        createdBy: {
+          select: {
+            id: true,
+            email: true,
           },
-          createdAt: true,
-          updatedAt: true
-        }
-      });
-
-      if (!existingDoc) {
-        return {
-          status: 200,
-          message: `Document With ID ${id} Not Found.`
-        }
-      }
-
-      return {
-        status: 200,
-        data: existingDoc
-      }
-
-    } catch (error) {
-      return {
-        status: 500,
-        message: `An error occured ${error}`
-      }
-    }
+        },
+        approvalChain: {
+          select: {
+            id: true,
+            steps: true,
+          },
+        },
+      },
+    });
+    if (!document) throw new NotFoundException('Document not found');
+    return document;
   }
 
   async update(id: number, dto: UpdateDocumentDto) {
     try {
-      const existing = await this.prisma.document.findUnique({ where: { id } });
-      if (!existing) {
+      // Check if document exists
+      const existingDocument = await this.prisma.document.findUnique({
+        where: { id },
+      });
+
+      if (!existingDocument) {
         return {
           status: 404,
-          message: `Document ${id} not found`
-        }
+          message: `Document ${id} not found`,
+        };
       }
 
-      const update = await this.prisma.document.update({
+      // Prepare update data
+      const updateData: any = {};
+
+      if (dto.title !== undefined) updateData.title = dto.title;
+      if (dto.description !== undefined) updateData.description = dto.description;
+      if (dto.status !== undefined) updateData.status = dto.status;
+
+      // If price or processingFee is updated, recalculate totalAmount
+      let recalcTotal = false;
+      if (dto.price !== undefined) {
+        updateData.price = dto.price;
+        recalcTotal = true;
+      }
+      if (dto.processingFee !== undefined) {
+        updateData.processingFee = dto.processingFee;
+        recalcTotal = true;
+      }
+
+      if (recalcTotal) {
+        const price = dto.price ?? existingDocument.price;
+        const processingFee = dto.processingFee ?? existingDocument.processingFee;
+        updateData.totalAmount = price + processingFee;
+      }
+
+      // Validate approval chain if being updated
+      if (dto.approvalChainId !== undefined) {
+        if (dto.approvalChainId !== null) {
+          const approvalChain = await this.prisma.approvalChain.findUnique({
+            where: { id: dto.approvalChainId },
+          });
+          if (!approvalChain) {
+            return {
+              status: 404,
+              message: `Approval chain with ID ${dto.approvalChainId} not found`,
+            };
+          }
+        }
+        updateData.approvalChainId = dto.approvalChainId;
+      }
+
+      // Perform update
+      const updatedDocument = await this.prisma.document.update({
         where: { id },
-        data: {
-          ...dto,
-          price: Number(dto.price),
-          processingFee: Number(dto.processingFee || 0),
-          totalAmount: Number(dto.price) + Number(dto.processingFee || 0),
+        data: updateData,
+        select: {
+          id: true,
+          title: true,
+          description: true,
+          status: true,
+          price: true,
+          processingFee: true,
+          totalAmount: true,
+          approvalChainId: true,
+          createdBy: {
+            select: {
+              id: true,
+              email: true,
+            },
+          },
+          createdAt: true,
+          updatedAt: true,
         },
-      })
+      });
 
       return {
         status: 200,
-        data: update
-      }
+        message: 'Document updated successfully',
+        data: updatedDocument,
+      };
     } catch (error) {
-
+      return {
+        status: 500,
+        message: `An error occurred: ${error.message || error}`,
+      };
     }
   }
-
+  
   async remove(id: number) {
     try {
-      const existing = await this.prisma.document.findUnique({ where: { id } });
-      if (!existing) {
+      const document = await this.prisma.document.findUnique({ where: { id } });
+
+      if (!document) {
         return {
           status: 404,
-          message: `Document ${id} not found`
-        }
+          message: `Document ${id} not fount.`,
+        };
       }
 
       await this.prisma.document.delete({ where: { id } });
       return {
         status: 200,
-        message: `Document ${id} deleted.`
-      }
+        message: `Document ${id} deleted`,
+      };
     } catch (error) {
       return {
         status: 500,
-        message: `An error occured ${error}`
-      }
+        message: `An error Occured: ${error}`,
+      };
     }
   }
 }

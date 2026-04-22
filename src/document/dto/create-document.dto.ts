@@ -1,47 +1,47 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { Transform } from "class-transformer";
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+// dto/create-document.dto.ts
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
+import { IsNotEmpty, IsNumber, IsOptional, IsString, Min } from 'class-validator';
 
 export class CreateDocumentDto {
-    @ApiProperty({ description: "Dcoument Title" })
-    @IsString()
-    @IsNotEmpty({ message: "Title Is required" })
-    title: string
+  @ApiProperty({ description: 'Document title (unique)' })
+  @IsString()
+  @IsNotEmpty({ message: 'Title is required' })
+  title: string;
 
-    @ApiProperty({ description: "Optional document description" })
-    @IsString()
-    @IsOptional()
-    description: string
+  @ApiPropertyOptional({ description: 'Optional document description' })
+  @IsString()
+  @IsOptional()
+  description?: string;
 
-    @ApiProperty({ description: "Document status (DRAFT, ACTIVE, INACTIVE)" })
-    @IsString()
-    @IsNotEmpty({ message: "Status is required" })
-    status: string
+  @ApiProperty({ description: 'Document status', example: 'DRAFT', enum: ['DRAFT', 'PENDING', 'APPROVED', 'REJECTED'] })
+  @IsString()
+  @IsNotEmpty({ message: 'Status is required' })
+  status: string;
 
-    @ApiProperty({ description: "Document price" })
-    @IsNumber()
-    @IsNotEmpty({ message: "Price is required" })
-    @Transform(({ value }) => parseFloat(value))
-    price: number
+  @ApiProperty({ description: 'Document price (in cents)', minimum: 0 })
+  @IsNumber()
+  @Min(0)
+  @IsNotEmpty({ message: 'Price is required' })
+  @Transform(({ value }) => parseFloat(value))
+  price: number;
 
-    @ApiProperty({ description: "Document Processing Fee" })
-    @IsNumber()
-    @IsNotEmpty({ message: "Processing fee is required" })
-    @Transform(({ value }) => parseFloat(value))
-    processingFee: number
+  @ApiProperty({ description: 'Processing fee (in cents)', minimum: 0 })
+  @IsNumber()
+  @Min(0)
+  @IsNotEmpty({ message: 'Processing fee is required' })
+  @Transform(({ value }) => parseFloat(value))
+  processingFee: number;
+  
+@ApiPropertyOptional({ description: 'ID of the approval chain to attach' })
+  @IsNumber()
+  @IsOptional()
+  @Transform(({ value }) => parseInt(value))
+  approvalChainId?: number;
 
-    @ApiProperty({ description: "Document Total Amoount" })
-    @IsNumber()
-    @IsNotEmpty({ message: "Total Amoount is required" })
-    @Transform(({ value }) => parseFloat(value))
-    totalAmount: number
-
-    @ApiProperty({
-        description: 'ID of the user creating this document',
-        example: 1,
-    })
-    @IsNumber()
-    @IsNotEmpty({ message: 'Created by user ID is required' })
-    @Transform(({ value }) => parseInt(value))
-    createdById: number;
+  @ApiPropertyOptional({ description: 'ID of the creator (admin only)' })
+  @IsNumber()
+  @IsOptional()
+  @Transform(({ value }) => parseInt(value))
+  createdById?: number;
 }

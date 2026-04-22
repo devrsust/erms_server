@@ -11,13 +11,14 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgres"
 }
 
 
 model Role {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique
+  id              Int      @id @default(autoincrement())
+  name            String   @unique
+  description     String?
 
   // Relations
   users     User[]
@@ -27,40 +28,6 @@ model Role {
   updatedAt DateTime @updatedAt
 
   @@index([name])
-}
-
-model User {
-  id                    Int        @id @default(autoincrement())
-  firstname             String
-  lastname              String
-  email                 String     @unique
-  password              String
-  isActive              Boolean    @default(true)
-  refresh_token         String?
-  refresh_token_expiry  DateTime?
-  last_login            DateTime?
-
-  // Foreign Key
-  roleId  Int?
-  role    Role?        @relation(fields: [roleId], references: [id], onDelete: Restrict)
-
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-
-  // Relations
-  documents     Document[]
-  faculty       Faculty[]
-  departments   Department[]
-  combo         Combo[]
-  approvals     Approval[]
-  comments      Comment[]
-  approvalChains   ApprovalChain[] @relation("UserCreatedChains")
-
-
-  // Indexes
-  @@index([email])
-  @@index([roleId])
-  @@index([isActive])
 }
 
 model Alumni {
@@ -99,6 +66,40 @@ model Alumni {
   @@index([isActive])
 }
 
+model User {
+  id                    Int        @id @default(autoincrement())
+  firstname             String
+  lastname              String
+  email                 String     @unique
+  password              String
+  isActive              Boolean    @default(true)
+  refresh_token         String?
+  refresh_token_expiry  DateTime?
+  last_login            DateTime?
+
+  // Foreign Key
+  roleId  Int?
+  role    Role?        @relation(fields: [roleId], references: [id], onDelete: Restrict)
+
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  // Relations
+  documents     Document[]
+  faculty       Faculty[]
+  departments   Department[]
+  combo         Combo[]
+  approvals     Approval[]
+  comments      Comment[]
+  approvalChains   ApprovalChain[] @relation("UserCreatedChains")
+
+
+  // Indexes
+  @@index([email])
+  @@index([roleId])
+  @@index([isActive])
+}
+
 model Document {
   id             Int       @id @default(autoincrement())
   title          String    @unique
@@ -116,12 +117,7 @@ model Document {
   approvalChainId Int?
   approvalChain   ApprovalChain? @relation(fields: [approvalChainId], references: [id])
 
-  currentStepId   Int?
-  currentStep     ApprovalStep? @relation("CurrentStep", fields: [currentStepId], references: [id])
-
   // Relations
-  approvals   Approval[]
-  comments    Comment[]
   requests    Request[]
 
   createdAt DateTime  @default(now())
@@ -168,7 +164,7 @@ model ApprovalStep {
   canReject Boolean   @default(true)
 
   // Relations
-  currentForDocuments Document[] @relation("CurrentStep")
+  currentForRequest   Request[] @relation("CurrentStep")
   approvals           Approval[]
 
   createdAt DateTime @default(now())
@@ -182,8 +178,8 @@ model ApprovalStep {
 model Approval {
   id          Int        @id @default(autoincrement())
 
-  documentId  Int
-  document    Document   @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  requestId   Int
+  request     Request    @relation(fields: [requestId], references: [id], onDelete: Cascade)
 
   stepId      Int
   step        ApprovalStep @relation(fields: [stepId], references: [id])
@@ -196,8 +192,8 @@ model Approval {
 
   createdAt   DateTime   @default(now())
 
-  @@unique([documentId, stepId])
-  @@index([documentId])
+  @@unique([requestId, stepId])
+  @@index([requestId])
   @@index([userId])
 }
 
@@ -205,28 +201,34 @@ model Comment {
   id          Int       @id @default(autoincrement())
   content     String
 
-  documentId  Int
-  document    Document  @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  requestId   Int
+  request     Request   @relation(fields: [requestId], references: [id], onDelete: Cascade)
 
   userId      Int
   user        User      @relation(fields: [userId], references: [id])
 
   createdAt   DateTime  @default(now())
 
-  @@index([documentId])
+  @@index([requestId])
 }
 
 model Request {
   id               Int       @id @default(autoincrement())
   type             String
   email            String?
-  destination      String?
+  address          String
   reference_number String    @unique @default(cuid())
   status           String    @default("PENDING")
 
   // Foreign Key
   userId           Int
   user             Alumni    @relation(fields: [userId], references: [id])
+
+  facultyId        Int?
+  faculty          Faculty?   @relation(fields: [facultyId], references: [id])
+
+  currentStepId     Int?
+  currentStep      ApprovalStep? @relation("CurrentStep", fields: [currentStepId], references: [id])
 
   documentId       Int
   document         Document    @relation(fields: [documentId], references: [id])
@@ -235,6 +237,8 @@ model Request {
   updatedAt        DateTime  @updatedAt
 
   payments         Payment[]
+  approvals        Approval[]
+  comments         Comment[]
 
   // Indexes
   @@index([userId])
@@ -278,6 +282,7 @@ model Faculty {
   createdBy     User?        @relation(fields: [createdById], references: [id], onDelete: Cascade)
 
   // Relations
+  requests      Request[]
   departments   Department[]
 
   // Timestamps
@@ -314,13 +319,15 @@ model Department {
 
 model Combo{
   id            Int       @id @default(autoincrement())
-  firstname     String
-  middlename    String?
-  lastname      String
-  email                String     @unique
-  matric_number        String     @unique
-  phone_number         String?
-  isPrinted            Boolean    @default(false)
+  name          String
+  class         String     
+  matric_number String     @unique
+  certNo        String     @unique
+  type          String
+  year          String
+  remark        String
+  session       String
+  print_date    String
 
   // Foreign key and relation
   createdById   Int
@@ -329,6 +336,3 @@ model Combo{
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 }
-
-
-

@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateRequestDto } from './dto/create-request.dto';
 import { UpdateRequestDto } from './dto/update-request.dto';
 import { PrismaService } from '../prisma/prisma.service';
+import { RequestApprovalDto } from './dto/request-approval.dto';
 
 @Injectable()
 export class RequestService {
@@ -9,47 +10,73 @@ export class RequestService {
 
   async create(paymentId: string, dto: CreateRequestDto) {
     try {
+      // 1. Validate payment first
       const payment = await this.prisma.payment.findUnique({ where: { id: paymentId } });
-
       if (!payment) {
-        return {
-          status: 400,
-          message: `Payment ${paymentId} not found`
-        }
+        return { status: 400, message: `Payment ${paymentId} not found` };
       }
-
       if (payment.status !== "SUCCESSFUL") {
-        return {
-          status: 400,
-          message: `Payment was not successful`
-        }
+        return { status: 400, message: `Payment was not successful` };
       }
 
-      const request = await this.prisma.request.create({
-        data: {
-          userId: dto.userId,
-          documentId: dto.documentId,
-          type: dto.type,
-          destination: dto.destination,
-          email: dto.email
-        },
+      // 2. Fetch document and its first approval step
+      const document = await this.prisma.document.findUnique({
+        where: { id: dto.documentId },
         select: {
-          id: true,
-          destination: true,
-          email: true,
-          user: {
+          approvalChain: {
             select: {
-              id: true,
-            }
-          },
-          document: {
-            select: {
-              id: true
+              steps: {
+                orderBy: { stepOrder: 'asc' },
+                take: 1,
+                select: { id: true }
+              }
             }
           }
         }
-      })
+      });
 
+      if (!document) {
+        return { status: 400, message: `Document with ID ${dto.documentId} not found` };
+      }
+
+      const currentStepId = document.approvalChain?.steps[0]?.id;
+
+      // 3. Prepare request data (including currentStepId)
+      const requestData: any = {
+        userId: dto.userId,
+        documentId: dto.documentId,
+        type: dto.type,
+        status: 'PENDING',
+        reference_number: dto.reference_number,
+        address: dto.address,
+        currentStepId: currentStepId,   // ✅ now in data
+      };
+
+      // Conditionally set email or facultyId
+      if (dto.type === 'internal' && dto.facultyId) {
+        requestData.facultyId = Number(dto.facultyId);
+      } else if (dto.type === 'external' && dto.email) {
+        requestData.email = dto.email;
+      }
+
+      // 4. Create request
+      const request = await this.prisma.request.create({
+        data: requestData,
+        select: {
+          id: true,
+          type: true,
+          email: true,
+          facultyId: true,
+          address: true,
+          reference_number: true,
+          currentStepId: true,    // ✅ include in response
+          status: true,
+          user: { select: { id: true, email: true } },
+          document: { select: { id: true, title: true } }
+        }
+      });
+
+      // 5. Link payment to request
       const updatedPayment = await this.prisma.payment.update({
         where: { id: paymentId },
         data: { requestId: request.id },
@@ -60,12 +87,9 @@ export class RequestService {
         message: "Request created and payment linked successfully",
         data: request,
         payment: updatedPayment
-      }
+      };
     } catch (error) {
-      return {
-        status: 500,
-        message: `An error occured ${error}`
-      }
+      return { status: 500, message: `An error occurred: ${error}` };
     }
   }
 
@@ -152,9 +176,185 @@ export class RequestService {
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} request`;
+  async getPendingApprovals(userId: number) {
+    try {
+      // 1. Get user's role (if any)
+      const user = await this.prisma.user.findUnique({
+        where: { id: userId },
+        select: { roleId: true }
+      });
+
+      if (!user) {
+        return { status: 404, message: `User ${userId} not found` };
+      }
+
+      const userRoleId = user.roleId;
+
+      // 2. Build the OR conditions for assignment
+      const assignmentConditions: any[] = [
+        { currentStep: { userId: userId } }
+      ];
+      if (userRoleId) {
+        assignmentConditions.push({ currentStep: { roleId: userRoleId } });
+      }
+
+      // 3. Fetch requests with current step assigned to user
+      const requests = await this.prisma.request.findMany({
+        where: {
+          currentStepId: { not: null },
+          OR: assignmentConditions
+        },
+        include: {
+          currentStep: true,
+          approvals: {
+            where: { userId: userId },  // only approvals by this user
+            select: { stepId: true }    // we only need stepId
+          },
+          document: {
+            select: {
+              id: true,
+              title: true,
+              approvalChain: {
+                select: {
+                  id: true,
+                  name: true
+                }
+              }
+            }
+          },
+          faculty: {
+            select: { id: true, name: true }
+          },
+          user: {
+            select: { id: true, email: true, firstname: true, lastname: true }
+          }
+        },
+        orderBy: { createdAt: 'desc' }
+      });
+
+      // 4. Filter out requests already approved by this user for the current step
+      const pendingRequests = requests.filter(req => {
+        const alreadyApproved = req.approvals.some(a => a.stepId === req.currentStepId);
+        return !alreadyApproved;
+      });
+
+      // 5. Remove the approvals array from response (optional)
+      const result = pendingRequests.map(({ approvals, ...rest }) => rest);
+
+      return {
+        status: 200,
+        data: result,
+        count: result.length
+      };
+    } catch (error) {
+      return { status: 500, message: `An error occurred: ${error}` };
+    }
   }
+
+  async findOne(id: number) {
+    try {
+      const req = await this.prisma.request.findUnique({
+        where: { id },
+        select: {
+          id: true,
+          type: true,
+          reference_number: true,
+          status: true,
+          faculty: {
+            select: {
+              id: true,
+              name: true
+            }
+          },
+          email: true,
+          address: true,
+          currentStep: true,
+          document: {
+            select: {
+              id: true,
+              title: true,
+              approvalChain: {
+                select: {
+                  id: true,
+                  steps: true
+                }
+              },
+            }
+          },
+          createdAt: true
+        }
+      });
+
+      if (!req) {
+        return {
+          status: 404,
+          message: `Request ${id} not Found!`
+        }
+      }
+
+      return {
+        status: 200,
+        data: req,
+      }
+
+    } catch (error) {
+
+    }
+  }
+
+  async findOneByAdmins(id: number) {
+    try {
+      const req = await this.prisma.request.findUnique({
+        where: { id },
+        select: {
+          id: true,
+          type: true,
+          reference_number: true,
+          status: true,
+          faculty: {
+            select: {
+              id: true,
+              name: true
+            }
+          },
+          user: true,
+          email: true,
+          address: true,
+          currentStep: true,
+          document: {
+            select: {
+              id: true,
+              title: true,
+              approvalChain: {
+                select: {
+                  id: true,
+                  steps: true
+                }
+              },
+            }
+          },
+          createdAt: true
+        }
+      });
+
+      if (!req) {
+        return {
+          status: 404,
+          message: `Request ${id} not Found!`
+        }
+      }
+
+      return {
+        status: 200,
+        data: req,
+      }
+
+    } catch (error) {
+
+    }
+  }
+
+  
 
   update(id: number, updateRequestDto: UpdateRequestDto) {
     return `This action updates a #${id} request`;

@@ -1,24 +1,24 @@
-import { PrismaClient } from "@prisma/client";
+// prisma/seed/role.seed.ts
+import { PrismaClient } from "../../generated/prisma/client";
 
-const prisma = new PrismaClient({
-  log: ["query", "info", "warn", "error"],
-});
-
-export const seedRoles = async () => {
+export async function seedRoles(prisma: PrismaClient) {
+  console.log("Seeding roles...");
+  
   const roles = [
-    { name: "Super Admin", description: "System moderator with full access" },
-    { name: "Admin", description: "Department-level moderator" },
-    { name: "Lecturer", description: "Academic staff who submits and approves documents" },
-    { name: "Student", description: "End user with limited access" },
+    { name: "Super Admin" },      
+    { name: "Admin" },
+    { name: "Alumni" },
+    { name: "Record Officer" },
+    { name: "Guest" }
   ];
 
   for (const role of roles) {
     await prisma.role.upsert({
       where: { name: role.name },
       update: {},
-      create: role,
+      create: role
     });
   }
 
-  console.log("✓ Roles seeded successfully");
-};
+  console.log(`${roles.length} roles seeded successfully!`);
+}

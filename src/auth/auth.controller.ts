@@ -2,7 +2,6 @@ import { Controller, Post, Body, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginUserDto } from './dto/login-user.dto';
 import { LoginAlumniDto } from './dto/login-alumni.dto';
-import { Alumni, User } from 'generated/prisma/client';
 import { JwtService } from '@nestjs/jwt';
 import { type Request } from 'express';
 
