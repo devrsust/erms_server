@@ -9,7 +9,7 @@
 # server with the `prisma dev` CLI command, when not choosing any non-default ports or settings. The API key, unlike the
 # one found in a remote Prisma Postgres URL, does not contain any sensitive information.
 
-DATABASE_URL="postgresql://postgres:frame@work1@localhost:5432/erms"
+DATABASE_URL="postgresql://root:AjPYi9rl7g8DlXZIEVNWbw3054jsMNOC@dpg-d7k0cepf9bms73bkjc5g-a/erms_og4h"
 
 DATABASE_HOST=localhost
 DATABASE_PORT=5432
