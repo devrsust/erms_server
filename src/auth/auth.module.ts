@@ -4,6 +4,7 @@ import { AuthController } from './auth.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { RsuApiModule } from '../rsu-api/rsu-api.module';
+import { ActivityModule } from 'src/activity/activity.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { RsuApiModule } from '../rsu-api/rsu-api.module';
       }),
     }),
     RsuApiModule,
+    ActivityModule,
   ],
   controllers: [AuthController],
   providers: [AuthService],

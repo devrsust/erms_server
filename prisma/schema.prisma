@@ -336,3 +336,25 @@ model Combo{
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 }
+
+model Activity {
+  id          Int      @id @default(autoincrement())
+
+  action      String
+  entity      String
+
+  description String?
+
+  // Polymorphic actor
+  actorType   String   // "ALUMNI" | "USER" | "SYSTEM"
+  actorId     String?  // ID from either table
+
+  meta        Json?
+
+  createdAt   DateTime @default(now())
+
+  @@index([entity])
+  @@index([actorType])
+  @@index([actorId])
+  @@index([createdAt])
+}

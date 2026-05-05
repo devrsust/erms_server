@@ -178,4 +178,15 @@ export class UserService {
       }
     }
   }
+
+  async getLatest() {
+    const data = await this.prisma.user.findMany({
+      orderBy: { createdAt: 'desc' },
+      take: 10,
+    });
+
+    console.log(data);
+
+    return data;  
+  }
 }

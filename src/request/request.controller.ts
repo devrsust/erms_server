@@ -20,13 +20,13 @@ export class RequestController {
   }
 
   @Get("user/:userId")
-  findAllByUser(@Param("userId") userId: number) {
+  findAllByUser(@Param("userId", ParseIntPipe) userId: number) {
     return this.requestService.findAllByUser(userId);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.requestService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.requestService.findOne(id);
   }
 
   @Get('admin/:id')

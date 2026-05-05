@@ -82,3 +82,8 @@ export type Department = Prisma.DepartmentModel
  * 
  */
 export type Combo = Prisma.ComboModel
+/**
+ * Model Activity
+ * 
+ */
+export type Activity = Prisma.ActivityModel

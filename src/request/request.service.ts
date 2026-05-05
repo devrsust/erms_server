@@ -49,15 +49,12 @@ export class RequestService {
         status: 'PENDING',
         reference_number: dto.reference_number,
         address: dto.address,
+        email: dto.email,                  // ✅ always included
+        facultyId: Number(dto.facultyId),
         currentStepId: currentStepId,   // ✅ now in data
       };
 
-      // Conditionally set email or facultyId
-      if (dto.type === 'internal' && dto.facultyId) {
-        requestData.facultyId = Number(dto.facultyId);
-      } else if (dto.type === 'external' && dto.email) {
-        requestData.email = dto.email;
-      }
+
 
       // 4. Create request
       const request = await this.prisma.request.create({
@@ -354,7 +351,7 @@ export class RequestService {
     }
   }
 
-  
+
 
   update(id: number, updateRequestDto: UpdateRequestDto) {
     return `This action updates a #${id} request`;

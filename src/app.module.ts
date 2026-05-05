@@ -19,6 +19,8 @@ import { ComboModule } from './combo/combo.module';
 import { ApprovalChainModule } from './approval-chain/approval-chain.module';
 import { ApprovalModule } from './approval/approval.module';
 import { CommentModule } from './comment/comment.module';
+import { DashboardModule } from './dashboard/dashboard.module';
+import { ActivityModule } from './activity/activity.module';
 
 @Module({
   imports: [
@@ -41,6 +43,8 @@ import { CommentModule } from './comment/comment.module';
     ApprovalChainModule,
     ApprovalModule,
     CommentModule,
+    DashboardModule,
+    ActivityModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

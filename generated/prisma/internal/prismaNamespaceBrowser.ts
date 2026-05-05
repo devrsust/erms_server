@@ -63,7 +63,8 @@ export const ModelName = {
   Payment: 'Payment',
   Faculty: 'Faculty',
   Department: 'Department',
-  Combo: 'Combo'
+  Combo: 'Combo',
+  Activity: 'Activity'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -281,6 +282,20 @@ export const ComboScalarFieldEnum = {
 } as const
 
 export type ComboScalarFieldEnum = (typeof ComboScalarFieldEnum)[keyof typeof ComboScalarFieldEnum]
+
+
+export const ActivityScalarFieldEnum = {
+  id: 'id',
+  action: 'action',
+  entity: 'entity',
+  description: 'description',
+  actorType: 'actorType',
+  actorId: 'actorId',
+  meta: 'meta',
+  createdAt: 'createdAt'
+} as const
+
+export type ActivityScalarFieldEnum = (typeof ActivityScalarFieldEnum)[keyof typeof ActivityScalarFieldEnum]
 
 
 export const SortOrder = {

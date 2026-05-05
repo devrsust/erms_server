@@ -1,11 +1,22 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Sse, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { interval, map, Observable, switchMap } from 'rxjs';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) { }
+
+  @Sse('stream')
+  stream(): Observable<MessageEvent> {
+    return interval(2000).pipe(
+      switchMap(() => this.userService.getLatest()),
+      map((users) => ({
+        data: users,
+      }) as MessageEvent),
+    );
+  }
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
