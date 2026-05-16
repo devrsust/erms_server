@@ -3,12 +3,16 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import * as bcrypt from 'bcrypt'
+import { ActivityService } from 'src/activity/activity.service';
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService) { }
+  constructor(
+    private prisma: PrismaService,
+    private readonly activityService: ActivityService,
+  ) { }
 
-  async create(dto: CreateUserDto) {
+  async create(dto: CreateUserDto, uid: number) {
     try {
       const existingUser = await this.prisma.user.findUnique({
         where: { email: dto.email },
@@ -42,6 +46,23 @@ export class UserService {
         }
       });
 
+      const actor = await this.prisma.user.findUnique({
+        where: { id: uid },
+        select: {
+          id: true,
+          email: true,
+          role: { select: { name: true } }
+        }
+      });
+
+      await this.activityService.create({
+        action: "CREATE",
+        entity: "USER",
+        description: `User ${newUser.email} was created`,
+        actorType: actor?.role?.name || "SYSTEM",
+        actorId: String(uid),
+      });
+
       return {
         status: 201,
         message: "User created",
@@ -55,7 +76,7 @@ export class UserService {
     }
   }
 
-  async findAll() {
+  async findAll(uid: number) {
     try {
       const users = await this.prisma.user.findMany({
         select: {
@@ -73,6 +94,24 @@ export class UserService {
           isActive: true
         }
       });
+
+      const actor = await this.prisma.user.findUnique({
+        where: { id: uid },
+        select: {
+          id: true,
+          email: true,
+          role: { select: { name: true } }
+        }
+      });
+
+      await this.activityService.create({
+        action: "VIEW",
+        entity: "USER",
+        description: `Retrieved all users list`,
+        actorType: actor?.role?.name || "SYSTEM",
+        actorId: String(uid),
+      });
+
       return {
         status: 200,
         data: users,
@@ -85,7 +124,7 @@ export class UserService {
     }
   }
 
-  async findOne(id: number) {
+  async findOne(id: number, uid: number) {
     try {
       const user = await this.prisma.user.findUnique({
         where: { id: id },
@@ -105,6 +144,23 @@ export class UserService {
         }
       }
 
+      const actor = await this.prisma.user.findUnique({
+        where: { id: uid },
+        select: {
+          id: true,
+          email: true,
+          role: { select: { name: true } }
+        }
+      });
+
+      await this.activityService.create({
+        action: "VIEW",
+        entity: "USER",
+        description: `Retrieved user ${user.email} details`,
+        actorType: actor?.role?.name || "SYSTEM",
+        actorId: String(uid),
+      });
+
       return {
         status: 200,
         data: user
@@ -118,7 +174,7 @@ export class UserService {
     }
   }
 
-  async update(id: number, dto: UpdateUserDto) {
+  async update(id: number, dto: UpdateUserDto, uid: number) {
     try {
       const existingUser = await this.prisma.user.findUnique({ where: { id: id } });
 
@@ -136,6 +192,23 @@ export class UserService {
         }
       })
 
+      const actor = await this.prisma.user.findUnique({
+        where: { id: uid },
+        select: {
+          id: true,
+          email: true,
+          role: { select: { name: true } }
+        }
+      });
+
+      await this.activityService.create({
+        action: "UPDATE",
+        entity: "USER",
+        description: `User ${existingUser.email} was updated`,
+        actorType: actor?.role?.name || "SYSTEM",
+        actorId: String(uid),
+      });
+
       return {
         status: 201,
         message: "User updated succesfully",
@@ -150,9 +223,9 @@ export class UserService {
     }
   }
 
-  async remove(id: number) {
+  async remove(id: number, uid: number) {
     try {
-      const user = this.prisma.user.findUnique({
+      const user = await this.prisma.user.findUnique({
         where: { id: id }
       });
 
@@ -163,8 +236,27 @@ export class UserService {
         }
       }
 
+      const userToDelete = await this.prisma.user.findUnique({ where: { id: id } });
+
       await this.prisma.user.delete({
         where: { id: id }
+      });
+
+      const actor = await this.prisma.user.findUnique({
+        where: { id: uid },
+        select: {
+          id: true,
+          email: true,
+          role: { select: { name: true } }
+        }
+      });
+
+      await this.activityService.create({
+        action: "DELETE",
+        entity: "USER",
+        description: `User ${userToDelete?.email} was deleted`,
+        actorType: actor?.role?.name || "SYSTEM",
+        actorId: String(uid),
       });
 
       return {
@@ -179,14 +271,29 @@ export class UserService {
     }
   }
 
-  async getLatest() {
+  async getLatest(uid: number) {
     const data = await this.prisma.user.findMany({
       orderBy: { createdAt: 'desc' },
       take: 10,
     });
 
-    console.log(data);
+    const actor = await this.prisma.user.findUnique({
+      where: { id: uid },
+      select: {
+        id: true,
+        email: true,
+        role: { select: { name: true } }
+      }
+    });
 
-    return data;  
+    await this.activityService.create({
+      action: "VIEW",
+      entity: "USER",
+      description: `Retrieved latest 10 users`,
+      actorType: actor?.role?.name || "SYSTEM",
+      actorId: String(uid),
+    });
+
+    return data;
   }
 }

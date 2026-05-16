@@ -11,7 +11,7 @@ export class ApprovalService {
 
   async create(dto: CreateApprovalDto) {
     try {
-      // 1. Fetch request with its document and approval chain
+      // 1. Fetch request with approval chain
       const request = await this.prisma.request.findUnique({
         where: { id: dto.requestId },
         include: {
@@ -43,9 +43,11 @@ export class ApprovalService {
         };
       }
 
-      // 2. Validate the step exists and belongs to the request's approval chain
+      // 2. Validate step
       const steps = request.document.approvalChain?.steps || [];
-      const step = steps.find(s => s.id === dto.stepId);
+      const currentIndex = steps.findIndex(s => s.id === dto.stepId);
+      const step = steps[currentIndex];
+
       if (!step) {
         return {
           status: 404,
@@ -53,7 +55,7 @@ export class ApprovalService {
         };
       }
 
-      // 3. Verify user is authorized for this step
+      // 3. Validate user
       const user = await this.prisma.user.findUnique({
         where: { id: dto.adminId },
         select: { id: true, roleId: true },
@@ -77,34 +79,25 @@ export class ApprovalService {
         };
       }
 
-      // 4. Check if this step has already been processed
+      // 4. Prevent duplicate processing
       const existingApproval = await this.prisma.approval.findFirst({
         where: {
           requestId: dto.requestId,
           stepId: dto.stepId,
         },
       });
+
       if (existingApproval) {
-        return {
+        return {  
           status: 400,
           message: 'This step has already been processed',
         };
       }
 
-      // 5. Perform all writes in a transaction
+      // 5. Transaction
       const result = await this.prisma.$transaction(async (tx) => {
-        // Create approval record
-        const approval = await tx.approval.create({
-          data: {
-            requestId: dto.requestId,
-            stepId: dto.stepId,
-            userId: user.id,
-            action: dto.action,
-            comment: dto.comment,
-          },
-        });
 
-        // Create comment only if a comment was provided
+        // COMMENT (shared)
         let comment: any = null;
         if (dto.comment) {
           comment = await tx.comment.create({
@@ -116,42 +109,150 @@ export class ApprovalService {
           });
         }
 
-        // Handle action
+        // =========================
+        // REJECT
+        // =========================
         if (dto.action === 'REJECT') {
+          const approval = await tx.approval.create({
+            data: {
+              requestId: dto.requestId,
+              stepId: step.id,
+              userId: user.id,
+              action: 'REJECT',
+              comment: dto.comment,
+            },
+          });
+
           await tx.request.update({
             where: { id: dto.requestId },
             data: { status: 'REJECTED' },
           });
-          return { approval, comment, action: 'REJECT' };
-        } else {
-          // APPROVE: find next step
-          const currentIndex = steps.findIndex(s => s.id === dto.stepId);
-          const nextStep = steps[currentIndex + 1];
 
-          if (nextStep) {
-            await tx.request.update({
-              where: { id: dto.requestId },
-              data: { currentStepId: nextStep.id },
-            });
-            return { approval, comment, action: 'APPROVE_NEXT', nextStep };
-          } else {
-            await tx.request.update({
-              where: { id: dto.requestId },
-              data: { status: 'APPROVED', currentStepId: null },
-            });
-            return { approval, comment, action: 'APPROVE_FINAL' };
-          }
+          return { action: 'REJECT', approval, comment };
         }
+
+        // =========================
+        // RETURN (Option 1 FIX)
+        // =========================
+        if (dto.action === 'RETURN') {
+          if (currentIndex <= 0) {
+            return {
+              status: 400,
+              message: 'Cannot return from the first step',
+            };
+          }
+
+          const previousStep = steps[currentIndex - 1];
+
+          // ✅ Delete current + forward approvals FIRST
+          const forwardStepIds = steps
+            .slice(currentIndex)
+            .map(s => s.id);
+
+          await tx.approval.deleteMany({
+            where: {
+              requestId: dto.requestId,
+              stepId: {
+                in: forwardStepIds,
+              },
+            },
+          });
+
+          // ✅ Move request backward
+          await tx.request.update({
+            where: { id: dto.requestId },
+            data: {
+              currentStepId: previousStep.id,
+              status: 'PENDING',
+            },
+          });
+
+          // ✅ Log RETURN AFTER cleanup
+          const approval = await tx.approval.create({
+            data: {
+              requestId: dto.requestId,
+              stepId: step.id,
+              userId: user.id,
+              action: 'RETURN',
+              comment: dto.comment,
+            },
+          });
+
+          return {
+            action: 'RETURN',
+            approval,
+            fromStepId: step.id,
+            toStepId: previousStep.id,
+          };
+        }
+
+        // =========================
+        // APPROVE
+        // =========================
+        const nextStep = steps[currentIndex + 1];
+
+        const approval = await tx.approval.create({
+          data: {
+            requestId: dto.requestId,
+            stepId: step.id,
+            userId: user.id,
+            action: 'APPROVE',
+            comment: dto.comment,
+          },
+        });
+
+        if (nextStep) {
+          await tx.request.update({
+            where: { id: dto.requestId },
+            data: { currentStepId: nextStep.id },
+          });
+
+          return {
+            action: 'APPROVE_NEXT',
+            approval,
+            comment,
+            nextStep,
+          };
+        }
+
+        await tx.request.update({
+          where: { id: dto.requestId },
+          data: {
+            status: 'APPROVED',
+            currentStepId: null,
+          },
+        });
+
+        return {
+          action: 'APPROVE_FINAL',
+          approval,
+          comment,
+        };
       });
 
-      // 6. Return appropriate success response
+      // 6. Response
       switch (result.action) {
         case 'REJECT':
           return {
             status: 200,
             message: 'Request rejected successfully',
-            data: { approval: result.approval, comment: result.comment },
+            data: {
+              approval: result.approval,
+              comment: result.comment,
+            },
           };
+
+        case 'RETURN':
+          return {
+            status: 200,
+            message: `Request returned from step ${result.fromStepId} to step ${result.toStepId}`,
+            data: {
+              approval: result.approval,
+              fromStepId: result.fromStepId,
+              toStepId: result.toStepId,
+            },
+          };
+
         case 'APPROVE_NEXT':
           return {
             status: 200,
@@ -162,17 +263,28 @@ export class ApprovalService {
               nextStep: result.nextStep,
             },
           };
+
         case 'APPROVE_FINAL':
           return {
             status: 200,
             message: 'Request fully approved',
-            data: { approval: result.approval, comment: result.comment },
+            data: {
+              approval: result.approval,
+              comment: result.comment,
+            },
+          };
+
+        default:
+          return {
+            status: 500,
+            message: 'Unknown action result',
           };
       }
+
     } catch (error) {
       return {
         status: 500,
-        message: `An error occurred: ${error.message || error}`,
+        message: `An error occurred: ${error}`,
       };
     }
   }
@@ -215,7 +327,7 @@ export class ApprovalService {
     } catch (error) {
       return {
         status: 500,
-        message: `An error occurred: ${error.message || error}`,
+        message: `An error occurred: ${error}`,
       };
     }
   }
@@ -248,7 +360,7 @@ export class ApprovalService {
     } catch (error) {
       return {
         status: 500,
-        message: `An error occurred: ${error.message || error}`,
+        message: `An error occurred: ${error}`,
       };
     }
   }

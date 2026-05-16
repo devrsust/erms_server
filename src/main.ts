@@ -16,7 +16,7 @@ async function bootstrap() {
    origin: origins,
    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
    credentials: true,
-   allowedHeaders: 'Content-Type, Accept, Authorization',
+   allowedHeaders: 'Content-Type, Accept, Authorization, user',
   });
 
   const config = new DocumentBuilder()

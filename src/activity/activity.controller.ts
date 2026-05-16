@@ -23,6 +23,11 @@ export class ActivityController {
     return this.activityService.findByUser(query);
   }
 
+  @Get('admin')
+  findByAdmin(@Query() query: FindUserActivityQueryDto) {
+    return this.activityService.findByAdmin(query);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.activityService.findOne(+id);

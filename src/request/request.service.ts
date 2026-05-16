@@ -175,7 +175,7 @@ export class RequestService {
 
   async getPendingApprovals(userId: number) {
     try {
-      // 1. Get user's role (if any)
+      // 1. Get user's role
       const user = await this.prisma.user.findUnique({
         where: { id: userId },
         select: { roleId: true }
@@ -187,25 +187,32 @@ export class RequestService {
 
       const userRoleId = user.roleId;
 
-      // 2. Build the OR conditions for assignment
+      // 2. Assignment conditions
       const assignmentConditions: any[] = [
         { currentStep: { userId: userId } }
       ];
+
       if (userRoleId) {
-        assignmentConditions.push({ currentStep: { roleId: userRoleId } });
+        assignmentConditions.push({
+          currentStep: { roleId: userRoleId }
+        });
       }
 
-      // 3. Fetch requests with current step assigned to user
+      // 3. Fetch requests
       const requests = await this.prisma.request.findMany({
         where: {
+          status: 'PENDING', // ✅ ensure only active workflows
           currentStepId: { not: null },
           OR: assignmentConditions
         },
         include: {
           currentStep: true,
           approvals: {
-            where: { userId: userId },  // only approvals by this user
-            select: { stepId: true }    // we only need stepId
+            where: { userId: userId },
+            select: {
+              stepId: true,
+              action: true // ✅ include action
+            }
           },
           document: {
             select: {
@@ -223,19 +230,36 @@ export class RequestService {
             select: { id: true, name: true }
           },
           user: {
-            select: { id: true, email: true, firstname: true, lastname: true }
+            select: {
+              id: true,
+              email: true,
+              firstname: true,
+              lastname: true
+            }
           }
         },
         orderBy: { createdAt: 'desc' }
       });
 
-      // 4. Filter out requests already approved by this user for the current step
+      // 4. Correct filtering
       const pendingRequests = requests.filter(req => {
-        const alreadyApproved = req.approvals.some(a => a.stepId === req.currentStepId);
-        return !alreadyApproved;
+        // ✅ double-check assignment (important safety)
+        const isAssigned =
+          req.currentStep?.userId === userId ||
+          (userRoleId && req.currentStep?.roleId === userRoleId);
+
+        if (!isAssigned) return false;
+
+        // ✅ only block if user COMPLETED this step
+        const alreadyCompleted = req.approvals.some(a =>
+          a.stepId === req.currentStepId &&
+          (a.action === 'APPROVE' || a.action === 'REJECT')
+        );
+
+        return !alreadyCompleted;
       });
 
-      // 5. Remove the approvals array from response (optional)
+      // 5. Clean response
       const result = pendingRequests.map(({ approvals, ...rest }) => rest);
 
       return {
@@ -243,8 +267,12 @@ export class RequestService {
         data: result,
         count: result.length
       };
+
     } catch (error) {
-      return { status: 500, message: `An error occurred: ${error}` };
+      return {
+        status: 500,
+        message: `An error occurred: ${error}`
+      };
     }
   }
 
@@ -276,6 +304,19 @@ export class RequestService {
                   steps: true
                 }
               },
+            }
+          },
+          comments: {
+            select: {
+              id: true,
+              content: true,
+              user: {
+                select: {
+                  id: true,
+                  firstname: true,
+                  lastname: true,
+                }
+              }
             }
           },
           createdAt: true
@@ -328,6 +369,19 @@ export class RequestService {
                   steps: true
                 }
               },
+            }
+          },
+          comments: {
+            select: {
+              id: true,
+              content: true,
+              user: {
+                select: {
+                  id: true,
+                  firstname: true,
+                  lastname: true,
+                }
+              }
             }
           },
           createdAt: true

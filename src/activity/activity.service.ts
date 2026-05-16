@@ -132,6 +132,63 @@ export class ActivityService {
     }
   }
 
+  async findByAdmin(query: FindUserActivityQueryDto) {
+    try {
+      const page = Number(query.page) || 1;
+      const limit = Number(query.limit) || 10;
+      const search = query.search?.trim() || '';
+
+      const sortBy = query.sortBy || 'createdAt';
+      const order: 'asc' | 'desc' = query.order === 'asc' ? 'asc' : 'desc';
+
+      const { skip, take } = paginate(page, limit);
+
+      // Base search
+      const searchWhere =
+        searchQuery(search, ['action', 'entity', 'description']) ?? {};
+
+      // Filters
+      const where: any = {
+        ...searchWhere,
+        actorType: query.actorType,
+        actorId: String(query.actorId),
+      };
+
+      // Safe sorting
+      const allowedSortFields = ['createdAt', 'action', 'entity'];
+      const safeSortBy = allowedSortFields.includes(sortBy)
+        ? sortBy
+        : 'createdAt';
+
+      const [items, total] = await Promise.all([
+        this.prisma.activity.findMany({
+          where,
+          skip,
+          take,
+          orderBy: {
+            [safeSortBy]: order,
+          },
+        }),
+        this.prisma.activity.count({ where }),
+      ]);
+
+      const totalPages = Math.ceil(total / limit);
+
+      return {
+        page,
+        limit,
+        total,
+        totalPages,
+        data: items,
+      };
+    } catch (error) {
+      return {
+        status: 500,
+        message: `An error occurred: ${error}`,
+      };
+    }
+  }
+
   async findByUser(query: FindUserActivityQueryDto) {
     try {
       const page = Number(query.page) || 1;
