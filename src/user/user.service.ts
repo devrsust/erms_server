@@ -6,7 +6,7 @@ import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   async create(dto: CreateUserDto) {
     try {
@@ -129,22 +129,28 @@ export class UserService {
         };
       }
 
+      let data: any = { ...dto };
+
+      // 🔐 hash password only if it is being updated
+      if (dto.password) {
+        const hashedPassword = await bcrypt.hash(dto.password, 10);
+        data.password = hashedPassword;
+      }
+
       const updatedUser = await this.prisma.user.update({
         where: { id },
-        data: {
-          ...dto,
-        },
+        data,
       });
 
       return {
-        status: 201,
-        message: 'User updated succesfully',
+        status: 200,
+        message: 'User updated successfully',
         data: updatedUser,
       };
     } catch (error) {
       return {
         status: 500,
-        message: `An error occured ${error}`,
+        message: `An error occurred ${error}`,
       };
     }
   }
