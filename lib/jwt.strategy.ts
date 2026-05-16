@@ -18,12 +18,12 @@ export interface JwtPayload {
 }
 
 export interface AuthRequest extends Request {
-  user: {
-    id: number;
-    email?: string;
-    role: string;
-    roleId?: number;
-  };
+    user: {
+        id: number;
+        email?: string;
+        role: string;
+        roleId?: number;
+    };
 }
 
 @Injectable()
@@ -53,14 +53,14 @@ export class JwtAuthGuard implements CanActivate {
                 secret: this.configService.get<string>('JWT_SECRET'),
             });
 
-            if (!payload?.sub || !payload.role) {
+            if (!payload?.sub) {
                 throw new UnauthorizedException('Invalid token payload');
             }
 
             request.user = {
                 id: payload.sub,
                 email: payload.email,
-                role: payload.role,
+                role: payload.role ?? 'USER',
                 roleId: payload.roleId,
             };
 
