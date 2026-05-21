@@ -133,7 +133,7 @@ model ApprovalChain {
   name        String    @unique
   description String?
 
-  steps       ApprovalStep[]
+  steps       ApprovalStep[] 
   documents   Document[]
 
   isActive    Boolean   @default(true)

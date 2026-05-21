@@ -34,12 +34,14 @@ export class ApprovalChainService {
       }
 
       // 3. Validate each step: must have either roleId or userId, not both
-      for (const step of dto.steps) {
-        if (step.roleId && step.userId) {
-          return {
-            status: 400,
-            message: `Step ${step.stepOrder}: Cannot assign both roleId and userId.`,
-          };
+      if (dto.steps) {
+        for (const step of dto.steps) {
+          if (step.roleId && step.userId) {
+            return {
+              status: 400,
+              message: `Step ${step.stepOrder}: Cannot assign both roleId and userId.`,
+            };
+          }
         }
       }
 
@@ -50,6 +52,7 @@ export class ApprovalChainService {
           description: dto.description,
           createdById: dto.createdById,
           isActive: true,
+
         },
       });
 
@@ -62,7 +65,7 @@ export class ApprovalChainService {
           description: step.description || null,
           roleId: step.roleId || null,
           userId: step.userId || null,
-          canReject: step.canReject ?? true,
+          canReject: true,
         })),
       });
 
@@ -74,7 +77,7 @@ export class ApprovalChainService {
             orderBy: { stepOrder: 'asc' },
           },
         },
-        
+
       });
 
       return {
@@ -85,7 +88,7 @@ export class ApprovalChainService {
     } catch (error) {
       return {
         status: 500,
-        message: `An error occurred: ${error.message || error}`,
+        message: `An error occurred: ${error}`,
       };
     }
   }
@@ -171,14 +174,14 @@ export class ApprovalChainService {
     });
 
     // If steps provided → replace existing steps
+    // If steps provided → update without deleting (safe with FK)
     if (dto.steps) {
-      // Validate duplicates
       const stepOrders = dto.steps.map(s => s.stepOrder);
+
       if (stepOrders.length !== new Set(stepOrders).size) {
         throw new BadRequestException("Duplicate stepOrder values detected.");
       }
 
-      // Validate role/user logic
       dto.steps.forEach(step => {
         if (step.roleId && step.userId) {
           throw new BadRequestException(
@@ -187,20 +190,35 @@ export class ApprovalChainService {
         }
       });
 
-      // Remove old steps
-      await this.prisma.approvalStep.deleteMany({ where: { chainId: id } });
-
-      // Create new steps
-      await this.prisma.approvalStep.createMany({
-        data: dto.steps.map(step => ({
-          chainId: id,
-          stepOrder: step.stepOrder,
-          name: step.name,
-          description: step.description || null,
-          roleId: step.roleId || null,
-          userId: step.userId || null,
-          canReject: step.canReject ?? true
-        }))
+      // Update chain steps safely (no delete)
+      await this.prisma.$transaction(async (tx) => {
+        if (dto.steps) {
+          for (const step of dto.steps) {
+            await tx.approvalStep.upsert({
+              where: {
+                chainId_stepOrder: {
+                  chainId: id,
+                  stepOrder: step.stepOrder,
+                },
+              },
+              update: {
+                name: step.name,
+                description: step.description || null,
+                roleId: step.roleId || null,
+                userId: step.userId || null,
+              },
+              create: {
+                chainId: id,
+                stepOrder: step.stepOrder,
+                name: step.name,
+                description: step.description || null,
+                roleId: step.roleId || null,
+                userId: step.userId || null,
+                canReject: true,
+              },
+            });
+          }
+        }
       });
     }
 
