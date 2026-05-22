@@ -49,6 +49,8 @@ export type RequestMinAggregateOutputType = {
   address: string | null
   reference_number: string | null
   status: string | null
+  pdfUrl: string | null
+  publicId: string | null
   userId: number | null
   facultyId: number | null
   currentStepId: number | null
@@ -64,6 +66,8 @@ export type RequestMaxAggregateOutputType = {
   address: string | null
   reference_number: string | null
   status: string | null
+  pdfUrl: string | null
+  publicId: string | null
   userId: number | null
   facultyId: number | null
   currentStepId: number | null
@@ -79,6 +83,8 @@ export type RequestCountAggregateOutputType = {
   address: number
   reference_number: number
   status: number
+  pdfUrl: number
+  publicId: number
   userId: number
   facultyId: number
   currentStepId: number
@@ -112,6 +118,8 @@ export type RequestMinAggregateInputType = {
   address?: true
   reference_number?: true
   status?: true
+  pdfUrl?: true
+  publicId?: true
   userId?: true
   facultyId?: true
   currentStepId?: true
@@ -127,6 +135,8 @@ export type RequestMaxAggregateInputType = {
   address?: true
   reference_number?: true
   status?: true
+  pdfUrl?: true
+  publicId?: true
   userId?: true
   facultyId?: true
   currentStepId?: true
@@ -142,6 +152,8 @@ export type RequestCountAggregateInputType = {
   address?: true
   reference_number?: true
   status?: true
+  pdfUrl?: true
+  publicId?: true
   userId?: true
   facultyId?: true
   currentStepId?: true
@@ -244,6 +256,8 @@ export type RequestGroupByOutputType = {
   address: string
   reference_number: string
   status: string
+  pdfUrl: string | null
+  publicId: string | null
   userId: number
   facultyId: number | null
   currentStepId: number | null
@@ -282,6 +296,8 @@ export type RequestWhereInput = {
   address?: Prisma.StringFilter<"Request"> | string
   reference_number?: Prisma.StringFilter<"Request"> | string
   status?: Prisma.StringFilter<"Request"> | string
+  pdfUrl?: Prisma.StringNullableFilter<"Request"> | string | null
+  publicId?: Prisma.StringNullableFilter<"Request"> | string | null
   userId?: Prisma.IntFilter<"Request"> | number
   facultyId?: Prisma.IntNullableFilter<"Request"> | number | null
   currentStepId?: Prisma.IntNullableFilter<"Request"> | number | null
@@ -304,6 +320,8 @@ export type RequestOrderByWithRelationInput = {
   address?: Prisma.SortOrder
   reference_number?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  pdfUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  publicId?: Prisma.SortOrderInput | Prisma.SortOrder
   userId?: Prisma.SortOrder
   facultyId?: Prisma.SortOrderInput | Prisma.SortOrder
   currentStepId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -329,6 +347,8 @@ export type RequestWhereUniqueInput = Prisma.AtLeast<{
   email?: Prisma.StringNullableFilter<"Request"> | string | null
   address?: Prisma.StringFilter<"Request"> | string
   status?: Prisma.StringFilter<"Request"> | string
+  pdfUrl?: Prisma.StringNullableFilter<"Request"> | string | null
+  publicId?: Prisma.StringNullableFilter<"Request"> | string | null
   userId?: Prisma.IntFilter<"Request"> | number
   facultyId?: Prisma.IntNullableFilter<"Request"> | number | null
   currentStepId?: Prisma.IntNullableFilter<"Request"> | number | null
@@ -351,6 +371,8 @@ export type RequestOrderByWithAggregationInput = {
   address?: Prisma.SortOrder
   reference_number?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  pdfUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  publicId?: Prisma.SortOrderInput | Prisma.SortOrder
   userId?: Prisma.SortOrder
   facultyId?: Prisma.SortOrderInput | Prisma.SortOrder
   currentStepId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -374,6 +396,8 @@ export type RequestScalarWhereWithAggregatesInput = {
   address?: Prisma.StringWithAggregatesFilter<"Request"> | string
   reference_number?: Prisma.StringWithAggregatesFilter<"Request"> | string
   status?: Prisma.StringWithAggregatesFilter<"Request"> | string
+  pdfUrl?: Prisma.StringNullableWithAggregatesFilter<"Request"> | string | null
+  publicId?: Prisma.StringNullableWithAggregatesFilter<"Request"> | string | null
   userId?: Prisma.IntWithAggregatesFilter<"Request"> | number
   facultyId?: Prisma.IntNullableWithAggregatesFilter<"Request"> | number | null
   currentStepId?: Prisma.IntNullableWithAggregatesFilter<"Request"> | number | null
@@ -388,6 +412,8 @@ export type RequestCreateInput = {
   address: string
   reference_number?: string
   status?: string
+  pdfUrl?: string | null
+  publicId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.AlumniCreateNestedOneWithoutRequestsInput
@@ -406,6 +432,8 @@ export type RequestUncheckedCreateInput = {
   address: string
   reference_number?: string
   status?: string
+  pdfUrl?: string | null
+  publicId?: string | null
   userId: number
   facultyId?: number | null
   currentStepId?: number | null
@@ -423,6 +451,8 @@ export type RequestUpdateInput = {
   address?: Prisma.StringFieldUpdateOperationsInput | string
   reference_number?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.AlumniUpdateOneRequiredWithoutRequestsNestedInput
@@ -441,6 +471,8 @@ export type RequestUncheckedUpdateInput = {
   address?: Prisma.StringFieldUpdateOperationsInput | string
   reference_number?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   facultyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   currentStepId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -459,6 +491,8 @@ export type RequestCreateManyInput = {
   address: string
   reference_number?: string
   status?: string
+  pdfUrl?: string | null
+  publicId?: string | null
   userId: number
   facultyId?: number | null
   currentStepId?: number | null
@@ -473,6 +507,8 @@ export type RequestUpdateManyMutationInput = {
   address?: Prisma.StringFieldUpdateOperationsInput | string
   reference_number?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -484,6 +520,8 @@ export type RequestUncheckedUpdateManyInput = {
   address?: Prisma.StringFieldUpdateOperationsInput | string
   reference_number?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   facultyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   currentStepId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -514,6 +552,8 @@ export type RequestCountOrderByAggregateInput = {
   address?: Prisma.SortOrder
   reference_number?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  pdfUrl?: Prisma.SortOrder
+  publicId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   facultyId?: Prisma.SortOrder
   currentStepId?: Prisma.SortOrder
@@ -537,6 +577,8 @@ export type RequestMaxOrderByAggregateInput = {
   address?: Prisma.SortOrder
   reference_number?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  pdfUrl?: Prisma.SortOrder
+  publicId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   facultyId?: Prisma.SortOrder
   currentStepId?: Prisma.SortOrder
@@ -552,6 +594,8 @@ export type RequestMinOrderByAggregateInput = {
   address?: Prisma.SortOrder
   reference_number?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  pdfUrl?: Prisma.SortOrder
+  publicId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   facultyId?: Prisma.SortOrder
   currentStepId?: Prisma.SortOrder
@@ -791,6 +835,8 @@ export type RequestCreateWithoutUserInput = {
   address: string
   reference_number?: string
   status?: string
+  pdfUrl?: string | null
+  publicId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   faculty?: Prisma.FacultyCreateNestedOneWithoutRequestsInput
@@ -808,6 +854,8 @@ export type RequestUncheckedCreateWithoutUserInput = {
   address: string
   reference_number?: string
   status?: string
+  pdfUrl?: string | null
+  publicId?: string | null
   facultyId?: number | null
   currentStepId?: number | null
   documentId: number
@@ -854,6 +902,8 @@ export type RequestScalarWhereInput = {
   address?: Prisma.StringFilter<"Request"> | string
   reference_number?: Prisma.StringFilter<"Request"> | string
   status?: Prisma.StringFilter<"Request"> | string
+  pdfUrl?: Prisma.StringNullableFilter<"Request"> | string | null
+  publicId?: Prisma.StringNullableFilter<"Request"> | string | null
   userId?: Prisma.IntFilter<"Request"> | number
   facultyId?: Prisma.IntNullableFilter<"Request"> | number | null
   currentStepId?: Prisma.IntNullableFilter<"Request"> | number | null
@@ -868,6 +918,8 @@ export type RequestCreateWithoutDocumentInput = {
   address: string
   reference_number?: string
   status?: string
+  pdfUrl?: string | null
+  publicId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.AlumniCreateNestedOneWithoutRequestsInput
@@ -885,6 +937,8 @@ export type RequestUncheckedCreateWithoutDocumentInput = {
   address: string
   reference_number?: string
   status?: string
+  pdfUrl?: string | null
+  publicId?: string | null
   userId: number
   facultyId?: number | null
   currentStepId?: number | null
@@ -927,6 +981,8 @@ export type RequestCreateWithoutCurrentStepInput = {
   address: string
   reference_number?: string
   status?: string
+  pdfUrl?: string | null
+  publicId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.AlumniCreateNestedOneWithoutRequestsInput
@@ -944,6 +1000,8 @@ export type RequestUncheckedCreateWithoutCurrentStepInput = {
   address: string
   reference_number?: string
   status?: string
+  pdfUrl?: string | null
+  publicId?: string | null
   userId: number
   facultyId?: number | null
   documentId: number
@@ -986,6 +1044,8 @@ export type RequestCreateWithoutApprovalsInput = {
   address: string
   reference_number?: string
   status?: string
+  pdfUrl?: string | null
+  publicId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.AlumniCreateNestedOneWithoutRequestsInput
@@ -1003,6 +1063,8 @@ export type RequestUncheckedCreateWithoutApprovalsInput = {
   address: string
   reference_number?: string
   status?: string
+  pdfUrl?: string | null
+  publicId?: string | null
   userId: number
   facultyId?: number | null
   currentStepId?: number | null
@@ -1035,6 +1097,8 @@ export type RequestUpdateWithoutApprovalsInput = {
   address?: Prisma.StringFieldUpdateOperationsInput | string
   reference_number?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.AlumniUpdateOneRequiredWithoutRequestsNestedInput
@@ -1052,6 +1116,8 @@ export type RequestUncheckedUpdateWithoutApprovalsInput = {
   address?: Prisma.StringFieldUpdateOperationsInput | string
   reference_number?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   facultyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   currentStepId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1068,6 +1134,8 @@ export type RequestCreateWithoutCommentsInput = {
   address: string
   reference_number?: string
   status?: string
+  pdfUrl?: string | null
+  publicId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.AlumniCreateNestedOneWithoutRequestsInput
@@ -1085,6 +1153,8 @@ export type RequestUncheckedCreateWithoutCommentsInput = {
   address: string
   reference_number?: string
   status?: string
+  pdfUrl?: string | null
+  publicId?: string | null
   userId: number
   facultyId?: number | null
   currentStepId?: number | null
@@ -1117,6 +1187,8 @@ export type RequestUpdateWithoutCommentsInput = {
   address?: Prisma.StringFieldUpdateOperationsInput | string
   reference_number?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.AlumniUpdateOneRequiredWithoutRequestsNestedInput
@@ -1134,6 +1206,8 @@ export type RequestUncheckedUpdateWithoutCommentsInput = {
   address?: Prisma.StringFieldUpdateOperationsInput | string
   reference_number?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   facultyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   currentStepId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1150,6 +1224,8 @@ export type RequestCreateWithoutPaymentsInput = {
   address: string
   reference_number?: string
   status?: string
+  pdfUrl?: string | null
+  publicId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.AlumniCreateNestedOneWithoutRequestsInput
@@ -1167,6 +1243,8 @@ export type RequestUncheckedCreateWithoutPaymentsInput = {
   address: string
   reference_number?: string
   status?: string
+  pdfUrl?: string | null
+  publicId?: string | null
   userId: number
   facultyId?: number | null
   currentStepId?: number | null
@@ -1199,6 +1277,8 @@ export type RequestUpdateWithoutPaymentsInput = {
   address?: Prisma.StringFieldUpdateOperationsInput | string
   reference_number?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.AlumniUpdateOneRequiredWithoutRequestsNestedInput
@@ -1216,6 +1296,8 @@ export type RequestUncheckedUpdateWithoutPaymentsInput = {
   address?: Prisma.StringFieldUpdateOperationsInput | string
   reference_number?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   facultyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   currentStepId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1232,6 +1314,8 @@ export type RequestCreateWithoutFacultyInput = {
   address: string
   reference_number?: string
   status?: string
+  pdfUrl?: string | null
+  publicId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.AlumniCreateNestedOneWithoutRequestsInput
@@ -1249,6 +1333,8 @@ export type RequestUncheckedCreateWithoutFacultyInput = {
   address: string
   reference_number?: string
   status?: string
+  pdfUrl?: string | null
+  publicId?: string | null
   userId: number
   currentStepId?: number | null
   documentId: number
@@ -1292,6 +1378,8 @@ export type RequestCreateManyUserInput = {
   address: string
   reference_number?: string
   status?: string
+  pdfUrl?: string | null
+  publicId?: string | null
   facultyId?: number | null
   currentStepId?: number | null
   documentId: number
@@ -1305,6 +1393,8 @@ export type RequestUpdateWithoutUserInput = {
   address?: Prisma.StringFieldUpdateOperationsInput | string
   reference_number?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   faculty?: Prisma.FacultyUpdateOneWithoutRequestsNestedInput
@@ -1322,6 +1412,8 @@ export type RequestUncheckedUpdateWithoutUserInput = {
   address?: Prisma.StringFieldUpdateOperationsInput | string
   reference_number?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   facultyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   currentStepId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   documentId?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1339,6 +1431,8 @@ export type RequestUncheckedUpdateManyWithoutUserInput = {
   address?: Prisma.StringFieldUpdateOperationsInput | string
   reference_number?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   facultyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   currentStepId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   documentId?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1353,6 +1447,8 @@ export type RequestCreateManyDocumentInput = {
   address: string
   reference_number?: string
   status?: string
+  pdfUrl?: string | null
+  publicId?: string | null
   userId: number
   facultyId?: number | null
   currentStepId?: number | null
@@ -1366,6 +1462,8 @@ export type RequestUpdateWithoutDocumentInput = {
   address?: Prisma.StringFieldUpdateOperationsInput | string
   reference_number?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.AlumniUpdateOneRequiredWithoutRequestsNestedInput
@@ -1383,6 +1481,8 @@ export type RequestUncheckedUpdateWithoutDocumentInput = {
   address?: Prisma.StringFieldUpdateOperationsInput | string
   reference_number?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   facultyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   currentStepId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1400,6 +1500,8 @@ export type RequestUncheckedUpdateManyWithoutDocumentInput = {
   address?: Prisma.StringFieldUpdateOperationsInput | string
   reference_number?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   facultyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   currentStepId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1414,6 +1516,8 @@ export type RequestCreateManyCurrentStepInput = {
   address: string
   reference_number?: string
   status?: string
+  pdfUrl?: string | null
+  publicId?: string | null
   userId: number
   facultyId?: number | null
   documentId: number
@@ -1427,6 +1531,8 @@ export type RequestUpdateWithoutCurrentStepInput = {
   address?: Prisma.StringFieldUpdateOperationsInput | string
   reference_number?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.AlumniUpdateOneRequiredWithoutRequestsNestedInput
@@ -1444,6 +1550,8 @@ export type RequestUncheckedUpdateWithoutCurrentStepInput = {
   address?: Prisma.StringFieldUpdateOperationsInput | string
   reference_number?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   facultyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   documentId?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1461,6 +1569,8 @@ export type RequestUncheckedUpdateManyWithoutCurrentStepInput = {
   address?: Prisma.StringFieldUpdateOperationsInput | string
   reference_number?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   facultyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   documentId?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1475,6 +1585,8 @@ export type RequestCreateManyFacultyInput = {
   address: string
   reference_number?: string
   status?: string
+  pdfUrl?: string | null
+  publicId?: string | null
   userId: number
   currentStepId?: number | null
   documentId: number
@@ -1488,6 +1600,8 @@ export type RequestUpdateWithoutFacultyInput = {
   address?: Prisma.StringFieldUpdateOperationsInput | string
   reference_number?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.AlumniUpdateOneRequiredWithoutRequestsNestedInput
@@ -1505,6 +1619,8 @@ export type RequestUncheckedUpdateWithoutFacultyInput = {
   address?: Prisma.StringFieldUpdateOperationsInput | string
   reference_number?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   currentStepId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   documentId?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1522,6 +1638,8 @@ export type RequestUncheckedUpdateManyWithoutFacultyInput = {
   address?: Prisma.StringFieldUpdateOperationsInput | string
   reference_number?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   currentStepId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   documentId?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1585,6 +1703,8 @@ export type RequestSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   address?: boolean
   reference_number?: boolean
   status?: boolean
+  pdfUrl?: boolean
+  publicId?: boolean
   userId?: boolean
   facultyId?: boolean
   currentStepId?: boolean
@@ -1608,6 +1728,8 @@ export type RequestSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   address?: boolean
   reference_number?: boolean
   status?: boolean
+  pdfUrl?: boolean
+  publicId?: boolean
   userId?: boolean
   facultyId?: boolean
   currentStepId?: boolean
@@ -1627,6 +1749,8 @@ export type RequestSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   address?: boolean
   reference_number?: boolean
   status?: boolean
+  pdfUrl?: boolean
+  publicId?: boolean
   userId?: boolean
   facultyId?: boolean
   currentStepId?: boolean
@@ -1646,6 +1770,8 @@ export type RequestSelectScalar = {
   address?: boolean
   reference_number?: boolean
   status?: boolean
+  pdfUrl?: boolean
+  publicId?: boolean
   userId?: boolean
   facultyId?: boolean
   currentStepId?: boolean
@@ -1654,7 +1780,7 @@ export type RequestSelectScalar = {
   updatedAt?: boolean
 }
 
-export type RequestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "type" | "email" | "address" | "reference_number" | "status" | "userId" | "facultyId" | "currentStepId" | "documentId" | "createdAt" | "updatedAt", ExtArgs["result"]["request"]>
+export type RequestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "type" | "email" | "address" | "reference_number" | "status" | "pdfUrl" | "publicId" | "userId" | "facultyId" | "currentStepId" | "documentId" | "createdAt" | "updatedAt", ExtArgs["result"]["request"]>
 export type RequestInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.AlumniDefaultArgs<ExtArgs>
   faculty?: boolean | Prisma.Request$facultyArgs<ExtArgs>
@@ -1696,6 +1822,8 @@ export type $RequestPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     address: string
     reference_number: string
     status: string
+    pdfUrl: string | null
+    publicId: string | null
     userId: number
     facultyId: number | null
     currentStepId: number | null
@@ -2138,6 +2266,8 @@ export interface RequestFieldRefs {
   readonly address: Prisma.FieldRef<"Request", 'String'>
   readonly reference_number: Prisma.FieldRef<"Request", 'String'>
   readonly status: Prisma.FieldRef<"Request", 'String'>
+  readonly pdfUrl: Prisma.FieldRef<"Request", 'String'>
+  readonly publicId: Prisma.FieldRef<"Request", 'String'>
   readonly userId: Prisma.FieldRef<"Request", 'Int'>
   readonly facultyId: Prisma.FieldRef<"Request", 'Int'>
   readonly currentStepId: Prisma.FieldRef<"Request", 'Int'>

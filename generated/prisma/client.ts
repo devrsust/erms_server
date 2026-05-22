@@ -107,3 +107,8 @@ export type Combo = Prisma.ComboModel
  * 
  */
 export type Activity = Prisma.ActivityModel
+/**
+ * Model Upload
+ * 
+ */
+export type Upload = Prisma.UploadModel

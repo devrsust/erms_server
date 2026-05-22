@@ -64,7 +64,8 @@ export const ModelName = {
   Faculty: 'Faculty',
   Department: 'Department',
   Combo: 'Combo',
-  Activity: 'Activity'
+  Activity: 'Activity',
+  Upload: 'Upload'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -129,6 +130,10 @@ export const UserScalarFieldEnum = {
   refresh_token: 'refresh_token',
   refresh_token_expiry: 'refresh_token_expiry',
   last_login: 'last_login',
+  signature: 'signature',
+  stamp: 'stamp',
+  signaturePublicId: 'signaturePublicId',
+  stampPublicId: 'stampPublicId',
   roleId: 'roleId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -212,6 +217,8 @@ export const RequestScalarFieldEnum = {
   address: 'address',
   reference_number: 'reference_number',
   status: 'status',
+  pdfUrl: 'pdfUrl',
+  publicId: 'publicId',
   userId: 'userId',
   facultyId: 'facultyId',
   currentStepId: 'currentStepId',
@@ -296,6 +303,19 @@ export const ActivityScalarFieldEnum = {
 } as const
 
 export type ActivityScalarFieldEnum = (typeof ActivityScalarFieldEnum)[keyof typeof ActivityScalarFieldEnum]
+
+
+export const UploadScalarFieldEnum = {
+  id: 'id',
+  url: 'url',
+  publicId: 'publicId',
+  folder: 'folder',
+  type: 'type',
+  userId: 'userId',
+  createdAt: 'createdAt'
+} as const
+
+export type UploadScalarFieldEnum = (typeof UploadScalarFieldEnum)[keyof typeof UploadScalarFieldEnum]
 
 
 export const SortOrder = {

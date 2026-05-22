@@ -397,7 +397,8 @@ export const ModelName = {
   Faculty: 'Faculty',
   Department: 'Department',
   Combo: 'Combo',
-  Activity: 'Activity'
+  Activity: 'Activity',
+  Upload: 'Upload'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -413,7 +414,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "role" | "alumni" | "user" | "document" | "approvalChain" | "approvalStep" | "approval" | "comment" | "request" | "payment" | "faculty" | "department" | "combo" | "activity"
+    modelProps: "role" | "alumni" | "user" | "document" | "approvalChain" | "approvalStep" | "approval" | "comment" | "request" | "payment" | "faculty" | "department" | "combo" | "activity" | "upload"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1453,6 +1454,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Upload: {
+      payload: Prisma.$UploadPayload<ExtArgs>
+      fields: Prisma.UploadFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.UploadFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UploadPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.UploadFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UploadPayload>
+        }
+        findFirst: {
+          args: Prisma.UploadFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UploadPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.UploadFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UploadPayload>
+        }
+        findMany: {
+          args: Prisma.UploadFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UploadPayload>[]
+        }
+        create: {
+          args: Prisma.UploadCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UploadPayload>
+        }
+        createMany: {
+          args: Prisma.UploadCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.UploadCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UploadPayload>[]
+        }
+        delete: {
+          args: Prisma.UploadDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UploadPayload>
+        }
+        update: {
+          args: Prisma.UploadUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UploadPayload>
+        }
+        deleteMany: {
+          args: Prisma.UploadDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.UploadUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.UploadUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UploadPayload>[]
+        }
+        upsert: {
+          args: Prisma.UploadUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UploadPayload>
+        }
+        aggregate: {
+          args: Prisma.UploadAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateUpload>
+        }
+        groupBy: {
+          args: Prisma.UploadGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UploadGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.UploadCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UploadCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1538,6 +1613,10 @@ export const UserScalarFieldEnum = {
   refresh_token: 'refresh_token',
   refresh_token_expiry: 'refresh_token_expiry',
   last_login: 'last_login',
+  signature: 'signature',
+  stamp: 'stamp',
+  signaturePublicId: 'signaturePublicId',
+  stampPublicId: 'stampPublicId',
   roleId: 'roleId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -1621,6 +1700,8 @@ export const RequestScalarFieldEnum = {
   address: 'address',
   reference_number: 'reference_number',
   status: 'status',
+  pdfUrl: 'pdfUrl',
+  publicId: 'publicId',
   userId: 'userId',
   facultyId: 'facultyId',
   currentStepId: 'currentStepId',
@@ -1705,6 +1786,19 @@ export const ActivityScalarFieldEnum = {
 } as const
 
 export type ActivityScalarFieldEnum = (typeof ActivityScalarFieldEnum)[keyof typeof ActivityScalarFieldEnum]
+
+
+export const UploadScalarFieldEnum = {
+  id: 'id',
+  url: 'url',
+  publicId: 'publicId',
+  folder: 'folder',
+  type: 'type',
+  userId: 'userId',
+  createdAt: 'createdAt'
+} as const
+
+export type UploadScalarFieldEnum = (typeof UploadScalarFieldEnum)[keyof typeof UploadScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1939,6 +2033,7 @@ export type GlobalOmitConfig = {
   department?: Prisma.DepartmentOmit
   combo?: Prisma.ComboOmit
   activity?: Prisma.ActivityOmit
+  upload?: Prisma.UploadOmit
 }
 
 /* Types for Logging */

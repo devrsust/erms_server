@@ -77,6 +77,12 @@ model User {
   refresh_token_expiry  DateTime?
   last_login            DateTime?
 
+  // Image Keys
+  signature             String?
+  stamp                 String?
+  signaturePublicId     String?
+  stampPublicId         String?
+
   // Foreign Key
   roleId  Int?
   role    Role?        @relation(fields: [roleId], references: [id], onDelete: Restrict)
@@ -219,6 +225,8 @@ model Request {
   address          String
   reference_number String    @unique @default(cuid())
   status           String    @default("PENDING")
+  pdfUrl           String?
+  publicId         String?
 
   // Foreign Key
   userId           Int
@@ -357,4 +365,14 @@ model Activity {
   @@index([actorType])
   @@index([actorId])
   @@index([createdAt])
+}
+
+model Upload {
+  id          Int      @id @default(autoincrement())
+  url         String
+  publicId    String?
+  folder      String
+  type        String   // signature | stamp | document | etc
+  userId      Int?
+  createdAt   DateTime @default(now())
 }

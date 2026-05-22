@@ -21,6 +21,7 @@ import { ApprovalModule } from './approval/approval.module';
 import { CommentModule } from './comment/comment.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { ActivityModule } from './activity/activity.module';
+import { UploadModule } from './upload/upload.module';
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import { ActivityModule } from './activity/activity.module';
     CommentModule,
     DashboardModule,
     ActivityModule,
+    UploadModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
