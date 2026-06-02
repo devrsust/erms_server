@@ -2,21 +2,29 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import * as bodyParser from 'body-parser'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   const configService = app.get(ConfigService)
 
+
+  app.use(bodyParser.json({ limit: '50mb' }))
+  app.use(bodyParser.urlencoded({
+    limit: '50mb',
+    extended: true,
+  }))
+
   app.setGlobalPrefix('api');
 
   const origins = configService.get("TRUSTED_ORIGINS")?.split(",") ?? [];
   console.log('CORS allowed origins:', origins);
   app.enableCors({
-   origin: origins,
-   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-   credentials: true,
-   allowedHeaders: 'Content-Type, Accept, Authorization, user',
+    origin: origins,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    credentials: true,
+    allowedHeaders: 'Content-Type, Accept, Authorization, user',
   });
 
   const config = new DocumentBuilder()

@@ -22,6 +22,7 @@ import { CommentModule } from './comment/comment.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { ActivityModule } from './activity/activity.module';
 import { UploadModule } from './upload/upload.module';
+import { TemplateModule } from './template/template.module';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { UploadModule } from './upload/upload.module';
     DashboardModule,
     ActivityModule,
     UploadModule,
+    TemplateModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

@@ -5,24 +5,42 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
-  moduleFormat    = "cjs"
+  provider     = "prisma-client"
+  output       = "../generated/prisma"
+  moduleFormat = "cjs"
 }
 
 datasource db {
   provider = "postgres"
 }
 
+model Template {
+  id      Int     @id @default(autoincrement())
+  name    String  @unique
+  content String? @db.Text
+  logo    String?
+
+  createdBy Int
+  creator   User @relation("TemplateCreator", fields: [createdBy], references: [id])
+
+  users User[] @relation("TemplateUsers")
+
+  requests Request[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([name])
+}
 
 model Role {
-  id              Int      @id @default(autoincrement())
-  name            String   @unique
-  description     String?
+  id          Int     @id @default(autoincrement())
+  name        String  @unique
+  description String?
 
   // Relations
-  users     User[]
-  Alumni    Alumni[]
+  users  User[]
+  Alumni Alumni[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -31,33 +49,33 @@ model Role {
 }
 
 model Alumni {
-  id                   Int        @id @default(autoincrement())
-  firstname            String
-  lastname             String
-  middlename           String?
-  email                String     @unique
-  matric_number        String     @unique
-  gender               String?
-  date_of_birth        DateTime?
-  phone_number         String?
-  address              String?
-  password             String?
+  id            Int       @id @default(autoincrement())
+  firstname     String
+  lastname      String
+  middlename    String?
+  email         String    @unique
+  matric_number String    @unique
+  gender        String?
+  date_of_birth DateTime?
+  phone_number  String?
+  address       String?
+  password      String?
 
   // Foreign Key
-  roleId     Int?
-  role       Role?     @relation(fields: [roleId], references: [id], onDelete: Restrict) 
+  roleId Int?
+  role   Role? @relation(fields: [roleId], references: [id], onDelete: Restrict)
 
   refresh_token        String?
   refresh_token_expiry DateTime?
   last_login           DateTime?
-  isActive             Boolean    @default(false)
-  createdAt            DateTime   @default(now())
-  updatedAt            DateTime   @updatedAt
+  isActive             Boolean   @default(false)
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
   data                 Json?
 
   // Relations
-  requests    Request[]
-  payments    Payment[]
+  requests Request[]
+  payments Payment[]
 
   // Indexes
   @@index([email])
@@ -67,38 +85,39 @@ model Alumni {
 }
 
 model User {
-  id                    Int        @id @default(autoincrement())
-  firstname             String
-  lastname              String
-  email                 String     @unique
-  password              String
-  isActive              Boolean    @default(true)
-  refresh_token         String?
-  refresh_token_expiry  DateTime?
-  last_login            DateTime?
+  id                   Int       @id @default(autoincrement())
+  firstname            String
+  lastname             String
+  email                String    @unique
+  password             String
+  isActive             Boolean   @default(true)
+  refresh_token        String?
+  refresh_token_expiry DateTime?
+  last_login           DateTime?
 
   // Image Keys
-  signature             String?
-  stamp                 String?
-  signaturePublicId     String?
-  stampPublicId         String?
+  signature         String?
+  stamp             String?
+  signaturePublicId String?
+  stampPublicId     String?
 
   // Foreign Key
-  roleId  Int?
-  role    Role?        @relation(fields: [roleId], references: [id], onDelete: Restrict)
+  roleId Int?
+  role   Role? @relation(fields: [roleId], references: [id], onDelete: Restrict)
 
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Relations
-  documents     Document[]
-  faculty       Faculty[]
-  departments   Department[]
-  combo         Combo[]
-  approvals     Approval[]
-  comments      Comment[]
+  documents        Document[]
+  faculty          Faculty[]
+  departments      Department[]
+  combo            Combo[]
+  approvals        Approval[]
+  comments         Comment[]
   approvalChains   ApprovalChain[] @relation("UserCreatedChains")
-
+  createdTemplates Template[]      @relation("TemplateCreator")
+  templates        Template[]      @relation("TemplateUsers")
 
   // Indexes
   @@index([email])
@@ -107,27 +126,27 @@ model User {
 }
 
 model Document {
-  id             Int       @id @default(autoincrement())
-  title          String    @unique
-  description    String?
-  status         String    @default("DRAFT") // DRAFT, PENDING, APPROVED, REJECTED
-  price          Int       @default(0)
-  processingFee  Int       @default(0)
-  totalAmount    Int       @default(0)
+  id            Int     @id @default(autoincrement())
+  title         String  @unique
+  description   String?
+  status        String  @default("DRAFT") // DRAFT, PENDING, APPROVED, REJECTED
+  price         Int     @default(0)
+  processingFee Int     @default(0)
+  totalAmount   Int     @default(0)
 
   // Creator
   createdById Int
-  createdBy   User      @relation(fields: [createdById], references: [id], onDelete: Cascade)
+  createdBy   User @relation(fields: [createdById], references: [id], onDelete: Cascade)
 
   // Approval Flow
   approvalChainId Int?
   approvalChain   ApprovalChain? @relation(fields: [approvalChainId], references: [id])
 
   // Relations
-  requests    Request[]
+  requests Request[]
 
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([createdById])
   @@index([status])
@@ -135,43 +154,43 @@ model Document {
 }
 
 model ApprovalChain {
-  id          Int       @id @default(autoincrement())
-  name        String    @unique
+  id          Int     @id @default(autoincrement())
+  name        String  @unique
   description String?
 
-  steps       ApprovalStep[] 
-  documents   Document[]
+  steps     ApprovalStep[]
+  documents Document[]
 
-  isActive    Boolean   @default(true)
+  isActive Boolean @default(true)
 
   createdById Int
   createdBy   User @relation("UserCreatedChains", fields: [createdById], references: [id])
 
-  createdAt   DateTime  @default(now())
+  createdAt DateTime @default(now())
 
   @@index([isActive])
 }
 
 model ApprovalStep {
-  id          Int       @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
-  chainId     Int
-  chain       ApprovalChain @relation(fields: [chainId], references: [id], onDelete: Cascade)
+  chainId Int
+  chain   ApprovalChain @relation(fields: [chainId], references: [id], onDelete: Cascade)
 
   stepOrder   Int
   name        String
   description String?
 
   // Approval Assignment
-  roleId   Int?
-  userId   Int?
+  roleId Int?
+  userId Int?
 
   // Options
-  canReject Boolean   @default(true)
+  canReject Boolean @default(true)
 
   // Relations
-  currentForRequest   Request[] @relation("CurrentStep")
-  approvals           Approval[]
+  currentForRequest Request[]  @relation("CurrentStep")
+  approvals         Approval[]
 
   createdAt DateTime @default(now())
 
@@ -182,21 +201,21 @@ model ApprovalStep {
 }
 
 model Approval {
-  id          Int        @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
-  requestId   Int
-  request     Request    @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  requestId Int
+  request   Request @relation(fields: [requestId], references: [id], onDelete: Cascade)
 
-  stepId      Int
-  step        ApprovalStep @relation(fields: [stepId], references: [id])
+  stepId Int
+  step   ApprovalStep @relation(fields: [stepId], references: [id])
 
-  userId      Int
-  user        User       @relation(fields: [userId], references: [id])
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
 
-  action      String     // APPROVE, REJECT
-  comment     String?
+  action  String // APPROVE, REJECT
+  comment String?
 
-  createdAt   DateTime   @default(now())
+  createdAt DateTime @default(now())
 
   @@unique([requestId, stepId])
   @@index([requestId])
@@ -204,49 +223,52 @@ model Approval {
 }
 
 model Comment {
-  id          Int       @id @default(autoincrement())
-  content     String
+  id      Int    @id @default(autoincrement())
+  content String
 
-  requestId   Int
-  request     Request   @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  requestId Int
+  request   Request @relation(fields: [requestId], references: [id], onDelete: Cascade)
 
-  userId      Int
-  user        User      @relation(fields: [userId], references: [id])
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
 
-  createdAt   DateTime  @default(now())
+  createdAt DateTime @default(now())
 
   @@index([requestId])
 }
 
 model Request {
-  id               Int       @id @default(autoincrement())
+  id               Int     @id @default(autoincrement())
   type             String
   email            String?
   address          String
-  reference_number String    @unique @default(cuid())
-  status           String    @default("PENDING")
+  reference_number String  @unique @default(cuid())
+  status           String  @default("PENDING")
   pdfUrl           String?
   publicId         String?
 
   // Foreign Key
-  userId           Int
-  user             Alumni    @relation(fields: [userId], references: [id])
+  userId Int?
+  user   Alumni? @relation(fields: [userId], references: [id])
 
-  facultyId        Int?
-  faculty          Faculty?   @relation(fields: [facultyId], references: [id])
+  facultyId Int?
+  faculty   Faculty? @relation(fields: [facultyId], references: [id])
 
-  currentStepId     Int?
-  currentStep      ApprovalStep? @relation("CurrentStep", fields: [currentStepId], references: [id])
+  currentStepId Int?
+  currentStep   ApprovalStep? @relation("CurrentStep", fields: [currentStepId], references: [id])
 
-  documentId       Int
-  document         Document    @relation(fields: [documentId], references: [id])
+  documentId Int
+  document   Document @relation(fields: [documentId], references: [id])
 
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
+  templateId Int?
+  template   Template? @relation(fields: [templateId], references: [id])
 
-  payments         Payment[]
-  approvals        Approval[]
-  comments         Comment[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  payments  Payment[]
+  approvals Approval[]
+  comments  Comment[]
 
   // Indexes
   @@index([userId])
@@ -255,25 +277,25 @@ model Request {
 }
 
 model Payment {
-  id                String        @id @default(cuid())
-  gateway_name      String     @default("PAYSTACK")
-  gateway_response  Json?
-  transaction_id    String?    @unique
-  totalAmount       Int
-  email             String?
-  status            String     @default("PENDING")
-  reference         String?    @unique
-  access_code       String?
+  id               String  @id @default(cuid())
+  gateway_name     String  @default("PAYSTACK")
+  gateway_response Json?
+  transaction_id   String? @unique
+  totalAmount      Int
+  email            String?
+  status           String  @default("PENDING")
+  reference        String? @unique
+  access_code      String?
 
   // Foreign Key
-  userId            Int
-  user              Alumni?     @relation(fields: [userId], references: [id])
+  userId Int
+  user   Alumni? @relation(fields: [userId], references: [id])
 
-  requestId         Int?
-  request           Request?    @relation(fields: [requestId], references: [id]) 
+  requestId Int?
+  request   Request? @relation(fields: [requestId], references: [id])
 
-  createdAt         DateTime   @default(now())
-  updatedAt         DateTime   @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Indexes
   @@index([userId])
@@ -282,20 +304,20 @@ model Payment {
 }
 
 model Faculty {
-  id            Int          @id @default(autoincrement())
-  name          String       @unique
+  id   Int    @id @default(autoincrement())
+  name String @unique
 
   // Audit
-  createdById   Int?
-  createdBy     User?        @relation(fields: [createdById], references: [id], onDelete: Cascade)
+  createdById Int?
+  createdBy   User? @relation(fields: [createdById], references: [id], onDelete: Cascade)
 
   // Relations
-  requests      Request[]
-  departments   Department[]
+  requests    Request[]
+  departments Department[]
 
   // Timestamps
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Indexes
   @@index([name])
@@ -303,20 +325,20 @@ model Faculty {
 }
 
 model Department {
-  id            Int          @id @default(autoincrement())
-  name          String       @unique
+  id   Int    @id @default(autoincrement())
+  name String @unique
 
   // Audit
-  createdById   Int?
-  createdBy     User?        @relation(fields: [createdById], references: [id], onDelete: Cascade)
+  createdById Int?
+  createdBy   User? @relation(fields: [createdById], references: [id], onDelete: Cascade)
 
   // Relations
-  facultyId     Int
-  faculty       Faculty      @relation(fields: [facultyId], references: [id], onDelete: Restrict)
+  facultyId Int
+  faculty   Faculty @relation(fields: [facultyId], references: [id], onDelete: Restrict)
 
   // Timestamps
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Constraints & Indexes
   @@unique([name, facultyId])
@@ -325,12 +347,12 @@ model Department {
   @@index([name])
 }
 
-model Combo{
-  id            Int       @id @default(autoincrement())
+model Combo {
+  id            Int    @id @default(autoincrement())
   name          String
-  class         String     
-  matric_number String     @unique
-  certNo        String     @unique
+  class         String
+  matric_number String @unique
+  certNo        String @unique
   type          String
   year          String
   remark        String
@@ -338,28 +360,28 @@ model Combo{
   print_date    String
 
   // Foreign key and relation
-  createdById   Int
-  createdBy     User      @relation(fields: [createdById], references: [id])
+  createdById Int
+  createdBy   User @relation(fields: [createdById], references: [id])
 
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Activity {
-  id          Int      @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
-  action      String
-  entity      String
+  action String
+  entity String
 
   description String?
 
   // Polymorphic actor
-  actorType   String   // "ALUMNI" | "USER" | "SYSTEM"
-  actorId     String?  // ID from either table
+  actorType String // "ALUMNI" | "USER" | "SYSTEM"
+  actorId   String? // ID from either table
 
-  meta        Json?
+  meta Json?
 
-  createdAt   DateTime @default(now())
+  createdAt DateTime @default(now())
 
   @@index([entity])
   @@index([actorType])
@@ -368,11 +390,11 @@ model Activity {
 }
 
 model Upload {
-  id          Int      @id @default(autoincrement())
-  url         String
-  publicId    String?
-  folder      String
-  type        String   // signature | stamp | document | etc
-  userId      Int?
-  createdAt   DateTime @default(now())
+  id        Int      @id @default(autoincrement())
+  url       String
+  publicId  String?
+  folder    String
+  type      String // signature | stamp | document | etc
+  userId    Int?
+  createdAt DateTime @default(now())
 }

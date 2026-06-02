@@ -98,6 +98,38 @@ export class UploadController {
   }
 
   // =========================================
+  // TRANSCRIPT
+  // =========================================
+
+  @Post('transcript')
+  @UseInterceptors(FileInterceptor('file'))
+  async postTranscript(
+    @Req() req: AuthenticatedRequest,
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({
+            maxSize: 10 * 1024 * 1024,
+          }),
+        ],
+      }),
+    )
+    file: Express.Multer.File,
+  ) {
+    return this.uploadService.postTranscript(
+      req.user.id,
+      file,
+    )
+  }
+
+  @Get('signature/:userId')
+  async getTranscript(
+    @Param('userId', ParseIntPipe) userId: number,
+  ) {
+    return this.uploadService.getTranscript(userId)
+  }
+
+  // =========================================
   // DELETE (OPTIONAL)
   // =========================================
 

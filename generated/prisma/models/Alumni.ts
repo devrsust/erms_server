@@ -680,11 +680,6 @@ export type AlumniSumOrderByAggregateInput = {
   roleId?: Prisma.SortOrder
 }
 
-export type AlumniScalarRelationFilter = {
-  is?: Prisma.AlumniWhereInput
-  isNot?: Prisma.AlumniWhereInput
-}
-
 export type AlumniNullableScalarRelationFilter = {
   is?: Prisma.AlumniWhereInput | null
   isNot?: Prisma.AlumniWhereInput | null
@@ -754,10 +749,12 @@ export type AlumniCreateNestedOneWithoutRequestsInput = {
   connect?: Prisma.AlumniWhereUniqueInput
 }
 
-export type AlumniUpdateOneRequiredWithoutRequestsNestedInput = {
+export type AlumniUpdateOneWithoutRequestsNestedInput = {
   create?: Prisma.XOR<Prisma.AlumniCreateWithoutRequestsInput, Prisma.AlumniUncheckedCreateWithoutRequestsInput>
   connectOrCreate?: Prisma.AlumniCreateOrConnectWithoutRequestsInput
   upsert?: Prisma.AlumniUpsertWithoutRequestsInput
+  disconnect?: Prisma.AlumniWhereInput | boolean
+  delete?: Prisma.AlumniWhereInput | boolean
   connect?: Prisma.AlumniWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.AlumniUpdateToOneWithWhereWithoutRequestsInput, Prisma.AlumniUpdateWithoutRequestsInput>, Prisma.AlumniUncheckedUpdateWithoutRequestsInput>
 }

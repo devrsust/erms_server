@@ -32,6 +32,7 @@ export class UploadService {
       'image/jpeg',
       'image/png',
       'image/svg+xml',
+      'application/pdf',
     ]
 
     if (!allowedMimeTypes.includes(file.mimetype)) {
@@ -40,17 +41,26 @@ export class UploadService {
       )
     }
 
+    // Check if the incoming file is a PDF
+    const isPdf = file.mimetype === 'application/pdf'
+
     try {
       return await new Promise<any>((resolve, reject) => {
         const stream = cloudinary.uploader.upload_stream(
           {
             folder,
+            // Cloudinary manages PDFs under the 'image' resource type
             resource_type: 'image',
-            transformation: [
-              { quality: 'auto' },
-              { fetch_format: 'auto' },
-            ],
-            allowed_formats: ['jpg', 'jpeg', 'png', 'svg'],
+            // 1. Added 'pdf' to the allowed formats array
+            allowed_formats: ['jpg', 'jpeg', 'png', 'svg', 'pdf'],
+
+            // 2. Only apply image optimizations if the file is NOT a PDF
+            ...(!isPdf && {
+              transformation: [
+                { quality: 'auto' },
+                { fetch_format: 'auto' },
+              ],
+            }),
           },
           (err, result) => {
             if (err) return reject(err)
@@ -146,6 +156,48 @@ export class UploadService {
     return {
       success: true,
       data: record,
+    }
+  }
+
+  // =========================
+  // Transcript
+  // =========================
+  async postTranscript(userId: number, file: Express.Multer.File) {
+    const uploaded = await this.upload(file, 'transcript')
+
+    const document = await this.prisma.upload.create({
+      data: {
+        url: uploaded.secure_url,
+        publicId: uploaded.public_id,
+        folder: 'transcript',
+        type: 'transcript',
+        userId,
+      },
+    })
+
+    return {
+      success: true,
+      message: 'Transcript uploaded',
+      data: document,
+    }
+  }
+
+  async getTranscript(userId: number) {
+    const document = await this.prisma.upload.findFirst({
+      where: {
+        userId,
+        type: 'transcript',
+      },
+      orderBy: { createdAt: 'desc' },
+    })
+
+    if (!document) {
+      throw new NotFoundException('Stamp not found')
+    }
+
+    return {
+      success: true,
+      data: document,
     }
   }
 

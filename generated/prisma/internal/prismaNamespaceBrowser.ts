@@ -51,6 +51,7 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
+  Template: 'Template',
   Role: 'Role',
   Alumni: 'Alumni',
   User: 'User',
@@ -82,6 +83,19 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 } as const)
 
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
+
+
+export const TemplateScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  content: 'content',
+  logo: 'logo',
+  createdBy: 'createdBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TemplateScalarFieldEnum = (typeof TemplateScalarFieldEnum)[keyof typeof TemplateScalarFieldEnum]
 
 
 export const RoleScalarFieldEnum = {
@@ -223,6 +237,7 @@ export const RequestScalarFieldEnum = {
   facultyId: 'facultyId',
   currentStepId: 'currentStepId',
   documentId: 'documentId',
+  templateId: 'templateId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

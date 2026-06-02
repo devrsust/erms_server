@@ -32,6 +32,7 @@ export type RequestAvgAggregateOutputType = {
   facultyId: number | null
   currentStepId: number | null
   documentId: number | null
+  templateId: number | null
 }
 
 export type RequestSumAggregateOutputType = {
@@ -40,6 +41,7 @@ export type RequestSumAggregateOutputType = {
   facultyId: number | null
   currentStepId: number | null
   documentId: number | null
+  templateId: number | null
 }
 
 export type RequestMinAggregateOutputType = {
@@ -55,6 +57,7 @@ export type RequestMinAggregateOutputType = {
   facultyId: number | null
   currentStepId: number | null
   documentId: number | null
+  templateId: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -72,6 +75,7 @@ export type RequestMaxAggregateOutputType = {
   facultyId: number | null
   currentStepId: number | null
   documentId: number | null
+  templateId: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -89,6 +93,7 @@ export type RequestCountAggregateOutputType = {
   facultyId: number
   currentStepId: number
   documentId: number
+  templateId: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -101,6 +106,7 @@ export type RequestAvgAggregateInputType = {
   facultyId?: true
   currentStepId?: true
   documentId?: true
+  templateId?: true
 }
 
 export type RequestSumAggregateInputType = {
@@ -109,6 +115,7 @@ export type RequestSumAggregateInputType = {
   facultyId?: true
   currentStepId?: true
   documentId?: true
+  templateId?: true
 }
 
 export type RequestMinAggregateInputType = {
@@ -124,6 +131,7 @@ export type RequestMinAggregateInputType = {
   facultyId?: true
   currentStepId?: true
   documentId?: true
+  templateId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -141,6 +149,7 @@ export type RequestMaxAggregateInputType = {
   facultyId?: true
   currentStepId?: true
   documentId?: true
+  templateId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -158,6 +167,7 @@ export type RequestCountAggregateInputType = {
   facultyId?: true
   currentStepId?: true
   documentId?: true
+  templateId?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -258,10 +268,11 @@ export type RequestGroupByOutputType = {
   status: string
   pdfUrl: string | null
   publicId: string | null
-  userId: number
+  userId: number | null
   facultyId: number | null
   currentStepId: number | null
   documentId: number
+  templateId: number | null
   createdAt: Date
   updatedAt: Date
   _count: RequestCountAggregateOutputType | null
@@ -298,16 +309,18 @@ export type RequestWhereInput = {
   status?: Prisma.StringFilter<"Request"> | string
   pdfUrl?: Prisma.StringNullableFilter<"Request"> | string | null
   publicId?: Prisma.StringNullableFilter<"Request"> | string | null
-  userId?: Prisma.IntFilter<"Request"> | number
+  userId?: Prisma.IntNullableFilter<"Request"> | number | null
   facultyId?: Prisma.IntNullableFilter<"Request"> | number | null
   currentStepId?: Prisma.IntNullableFilter<"Request"> | number | null
   documentId?: Prisma.IntFilter<"Request"> | number
+  templateId?: Prisma.IntNullableFilter<"Request"> | number | null
   createdAt?: Prisma.DateTimeFilter<"Request"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Request"> | Date | string
-  user?: Prisma.XOR<Prisma.AlumniScalarRelationFilter, Prisma.AlumniWhereInput>
+  user?: Prisma.XOR<Prisma.AlumniNullableScalarRelationFilter, Prisma.AlumniWhereInput> | null
   faculty?: Prisma.XOR<Prisma.FacultyNullableScalarRelationFilter, Prisma.FacultyWhereInput> | null
   currentStep?: Prisma.XOR<Prisma.ApprovalStepNullableScalarRelationFilter, Prisma.ApprovalStepWhereInput> | null
   document?: Prisma.XOR<Prisma.DocumentScalarRelationFilter, Prisma.DocumentWhereInput>
+  template?: Prisma.XOR<Prisma.TemplateNullableScalarRelationFilter, Prisma.TemplateWhereInput> | null
   payments?: Prisma.PaymentListRelationFilter
   approvals?: Prisma.ApprovalListRelationFilter
   comments?: Prisma.CommentListRelationFilter
@@ -322,16 +335,18 @@ export type RequestOrderByWithRelationInput = {
   status?: Prisma.SortOrder
   pdfUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   publicId?: Prisma.SortOrderInput | Prisma.SortOrder
-  userId?: Prisma.SortOrder
+  userId?: Prisma.SortOrderInput | Prisma.SortOrder
   facultyId?: Prisma.SortOrderInput | Prisma.SortOrder
   currentStepId?: Prisma.SortOrderInput | Prisma.SortOrder
   documentId?: Prisma.SortOrder
+  templateId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.AlumniOrderByWithRelationInput
   faculty?: Prisma.FacultyOrderByWithRelationInput
   currentStep?: Prisma.ApprovalStepOrderByWithRelationInput
   document?: Prisma.DocumentOrderByWithRelationInput
+  template?: Prisma.TemplateOrderByWithRelationInput
   payments?: Prisma.PaymentOrderByRelationAggregateInput
   approvals?: Prisma.ApprovalOrderByRelationAggregateInput
   comments?: Prisma.CommentOrderByRelationAggregateInput
@@ -349,16 +364,18 @@ export type RequestWhereUniqueInput = Prisma.AtLeast<{
   status?: Prisma.StringFilter<"Request"> | string
   pdfUrl?: Prisma.StringNullableFilter<"Request"> | string | null
   publicId?: Prisma.StringNullableFilter<"Request"> | string | null
-  userId?: Prisma.IntFilter<"Request"> | number
+  userId?: Prisma.IntNullableFilter<"Request"> | number | null
   facultyId?: Prisma.IntNullableFilter<"Request"> | number | null
   currentStepId?: Prisma.IntNullableFilter<"Request"> | number | null
   documentId?: Prisma.IntFilter<"Request"> | number
+  templateId?: Prisma.IntNullableFilter<"Request"> | number | null
   createdAt?: Prisma.DateTimeFilter<"Request"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Request"> | Date | string
-  user?: Prisma.XOR<Prisma.AlumniScalarRelationFilter, Prisma.AlumniWhereInput>
+  user?: Prisma.XOR<Prisma.AlumniNullableScalarRelationFilter, Prisma.AlumniWhereInput> | null
   faculty?: Prisma.XOR<Prisma.FacultyNullableScalarRelationFilter, Prisma.FacultyWhereInput> | null
   currentStep?: Prisma.XOR<Prisma.ApprovalStepNullableScalarRelationFilter, Prisma.ApprovalStepWhereInput> | null
   document?: Prisma.XOR<Prisma.DocumentScalarRelationFilter, Prisma.DocumentWhereInput>
+  template?: Prisma.XOR<Prisma.TemplateNullableScalarRelationFilter, Prisma.TemplateWhereInput> | null
   payments?: Prisma.PaymentListRelationFilter
   approvals?: Prisma.ApprovalListRelationFilter
   comments?: Prisma.CommentListRelationFilter
@@ -373,10 +390,11 @@ export type RequestOrderByWithAggregationInput = {
   status?: Prisma.SortOrder
   pdfUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   publicId?: Prisma.SortOrderInput | Prisma.SortOrder
-  userId?: Prisma.SortOrder
+  userId?: Prisma.SortOrderInput | Prisma.SortOrder
   facultyId?: Prisma.SortOrderInput | Prisma.SortOrder
   currentStepId?: Prisma.SortOrderInput | Prisma.SortOrder
   documentId?: Prisma.SortOrder
+  templateId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.RequestCountOrderByAggregateInput
@@ -398,10 +416,11 @@ export type RequestScalarWhereWithAggregatesInput = {
   status?: Prisma.StringWithAggregatesFilter<"Request"> | string
   pdfUrl?: Prisma.StringNullableWithAggregatesFilter<"Request"> | string | null
   publicId?: Prisma.StringNullableWithAggregatesFilter<"Request"> | string | null
-  userId?: Prisma.IntWithAggregatesFilter<"Request"> | number
+  userId?: Prisma.IntNullableWithAggregatesFilter<"Request"> | number | null
   facultyId?: Prisma.IntNullableWithAggregatesFilter<"Request"> | number | null
   currentStepId?: Prisma.IntNullableWithAggregatesFilter<"Request"> | number | null
   documentId?: Prisma.IntWithAggregatesFilter<"Request"> | number
+  templateId?: Prisma.IntNullableWithAggregatesFilter<"Request"> | number | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Request"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Request"> | Date | string
 }
@@ -416,10 +435,11 @@ export type RequestCreateInput = {
   publicId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.AlumniCreateNestedOneWithoutRequestsInput
+  user?: Prisma.AlumniCreateNestedOneWithoutRequestsInput
   faculty?: Prisma.FacultyCreateNestedOneWithoutRequestsInput
   currentStep?: Prisma.ApprovalStepCreateNestedOneWithoutCurrentForRequestInput
   document: Prisma.DocumentCreateNestedOneWithoutRequestsInput
+  template?: Prisma.TemplateCreateNestedOneWithoutRequestsInput
   payments?: Prisma.PaymentCreateNestedManyWithoutRequestInput
   approvals?: Prisma.ApprovalCreateNestedManyWithoutRequestInput
   comments?: Prisma.CommentCreateNestedManyWithoutRequestInput
@@ -434,10 +454,11 @@ export type RequestUncheckedCreateInput = {
   status?: string
   pdfUrl?: string | null
   publicId?: string | null
-  userId: number
+  userId?: number | null
   facultyId?: number | null
   currentStepId?: number | null
   documentId: number
+  templateId?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutRequestInput
@@ -455,10 +476,11 @@ export type RequestUpdateInput = {
   publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.AlumniUpdateOneRequiredWithoutRequestsNestedInput
+  user?: Prisma.AlumniUpdateOneWithoutRequestsNestedInput
   faculty?: Prisma.FacultyUpdateOneWithoutRequestsNestedInput
   currentStep?: Prisma.ApprovalStepUpdateOneWithoutCurrentForRequestNestedInput
   document?: Prisma.DocumentUpdateOneRequiredWithoutRequestsNestedInput
+  template?: Prisma.TemplateUpdateOneWithoutRequestsNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutRequestNestedInput
   approvals?: Prisma.ApprovalUpdateManyWithoutRequestNestedInput
   comments?: Prisma.CommentUpdateManyWithoutRequestNestedInput
@@ -473,10 +495,11 @@ export type RequestUncheckedUpdateInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   facultyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   currentStepId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   documentId?: Prisma.IntFieldUpdateOperationsInput | number
+  templateId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutRequestNestedInput
@@ -493,10 +516,11 @@ export type RequestCreateManyInput = {
   status?: string
   pdfUrl?: string | null
   publicId?: string | null
-  userId: number
+  userId?: number | null
   facultyId?: number | null
   currentStepId?: number | null
   documentId: number
+  templateId?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -522,10 +546,11 @@ export type RequestUncheckedUpdateManyInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   facultyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   currentStepId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   documentId?: Prisma.IntFieldUpdateOperationsInput | number
+  templateId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -558,6 +583,7 @@ export type RequestCountOrderByAggregateInput = {
   facultyId?: Prisma.SortOrder
   currentStepId?: Prisma.SortOrder
   documentId?: Prisma.SortOrder
+  templateId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -568,6 +594,7 @@ export type RequestAvgOrderByAggregateInput = {
   facultyId?: Prisma.SortOrder
   currentStepId?: Prisma.SortOrder
   documentId?: Prisma.SortOrder
+  templateId?: Prisma.SortOrder
 }
 
 export type RequestMaxOrderByAggregateInput = {
@@ -583,6 +610,7 @@ export type RequestMaxOrderByAggregateInput = {
   facultyId?: Prisma.SortOrder
   currentStepId?: Prisma.SortOrder
   documentId?: Prisma.SortOrder
+  templateId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -600,6 +628,7 @@ export type RequestMinOrderByAggregateInput = {
   facultyId?: Prisma.SortOrder
   currentStepId?: Prisma.SortOrder
   documentId?: Prisma.SortOrder
+  templateId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -610,11 +639,54 @@ export type RequestSumOrderByAggregateInput = {
   facultyId?: Prisma.SortOrder
   currentStepId?: Prisma.SortOrder
   documentId?: Prisma.SortOrder
+  templateId?: Prisma.SortOrder
 }
 
 export type RequestNullableScalarRelationFilter = {
   is?: Prisma.RequestWhereInput | null
   isNot?: Prisma.RequestWhereInput | null
+}
+
+export type RequestCreateNestedManyWithoutTemplateInput = {
+  create?: Prisma.XOR<Prisma.RequestCreateWithoutTemplateInput, Prisma.RequestUncheckedCreateWithoutTemplateInput> | Prisma.RequestCreateWithoutTemplateInput[] | Prisma.RequestUncheckedCreateWithoutTemplateInput[]
+  connectOrCreate?: Prisma.RequestCreateOrConnectWithoutTemplateInput | Prisma.RequestCreateOrConnectWithoutTemplateInput[]
+  createMany?: Prisma.RequestCreateManyTemplateInputEnvelope
+  connect?: Prisma.RequestWhereUniqueInput | Prisma.RequestWhereUniqueInput[]
+}
+
+export type RequestUncheckedCreateNestedManyWithoutTemplateInput = {
+  create?: Prisma.XOR<Prisma.RequestCreateWithoutTemplateInput, Prisma.RequestUncheckedCreateWithoutTemplateInput> | Prisma.RequestCreateWithoutTemplateInput[] | Prisma.RequestUncheckedCreateWithoutTemplateInput[]
+  connectOrCreate?: Prisma.RequestCreateOrConnectWithoutTemplateInput | Prisma.RequestCreateOrConnectWithoutTemplateInput[]
+  createMany?: Prisma.RequestCreateManyTemplateInputEnvelope
+  connect?: Prisma.RequestWhereUniqueInput | Prisma.RequestWhereUniqueInput[]
+}
+
+export type RequestUpdateManyWithoutTemplateNestedInput = {
+  create?: Prisma.XOR<Prisma.RequestCreateWithoutTemplateInput, Prisma.RequestUncheckedCreateWithoutTemplateInput> | Prisma.RequestCreateWithoutTemplateInput[] | Prisma.RequestUncheckedCreateWithoutTemplateInput[]
+  connectOrCreate?: Prisma.RequestCreateOrConnectWithoutTemplateInput | Prisma.RequestCreateOrConnectWithoutTemplateInput[]
+  upsert?: Prisma.RequestUpsertWithWhereUniqueWithoutTemplateInput | Prisma.RequestUpsertWithWhereUniqueWithoutTemplateInput[]
+  createMany?: Prisma.RequestCreateManyTemplateInputEnvelope
+  set?: Prisma.RequestWhereUniqueInput | Prisma.RequestWhereUniqueInput[]
+  disconnect?: Prisma.RequestWhereUniqueInput | Prisma.RequestWhereUniqueInput[]
+  delete?: Prisma.RequestWhereUniqueInput | Prisma.RequestWhereUniqueInput[]
+  connect?: Prisma.RequestWhereUniqueInput | Prisma.RequestWhereUniqueInput[]
+  update?: Prisma.RequestUpdateWithWhereUniqueWithoutTemplateInput | Prisma.RequestUpdateWithWhereUniqueWithoutTemplateInput[]
+  updateMany?: Prisma.RequestUpdateManyWithWhereWithoutTemplateInput | Prisma.RequestUpdateManyWithWhereWithoutTemplateInput[]
+  deleteMany?: Prisma.RequestScalarWhereInput | Prisma.RequestScalarWhereInput[]
+}
+
+export type RequestUncheckedUpdateManyWithoutTemplateNestedInput = {
+  create?: Prisma.XOR<Prisma.RequestCreateWithoutTemplateInput, Prisma.RequestUncheckedCreateWithoutTemplateInput> | Prisma.RequestCreateWithoutTemplateInput[] | Prisma.RequestUncheckedCreateWithoutTemplateInput[]
+  connectOrCreate?: Prisma.RequestCreateOrConnectWithoutTemplateInput | Prisma.RequestCreateOrConnectWithoutTemplateInput[]
+  upsert?: Prisma.RequestUpsertWithWhereUniqueWithoutTemplateInput | Prisma.RequestUpsertWithWhereUniqueWithoutTemplateInput[]
+  createMany?: Prisma.RequestCreateManyTemplateInputEnvelope
+  set?: Prisma.RequestWhereUniqueInput | Prisma.RequestWhereUniqueInput[]
+  disconnect?: Prisma.RequestWhereUniqueInput | Prisma.RequestWhereUniqueInput[]
+  delete?: Prisma.RequestWhereUniqueInput | Prisma.RequestWhereUniqueInput[]
+  connect?: Prisma.RequestWhereUniqueInput | Prisma.RequestWhereUniqueInput[]
+  update?: Prisma.RequestUpdateWithWhereUniqueWithoutTemplateInput | Prisma.RequestUpdateWithWhereUniqueWithoutTemplateInput[]
+  updateMany?: Prisma.RequestUpdateManyWithWhereWithoutTemplateInput | Prisma.RequestUpdateManyWithWhereWithoutTemplateInput[]
+  deleteMany?: Prisma.RequestScalarWhereInput | Prisma.RequestScalarWhereInput[]
 }
 
 export type RequestCreateNestedManyWithoutUserInput = {
@@ -829,6 +901,92 @@ export type RequestUncheckedUpdateManyWithoutFacultyNestedInput = {
   deleteMany?: Prisma.RequestScalarWhereInput | Prisma.RequestScalarWhereInput[]
 }
 
+export type RequestCreateWithoutTemplateInput = {
+  type: string
+  email?: string | null
+  address: string
+  reference_number?: string
+  status?: string
+  pdfUrl?: string | null
+  publicId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user?: Prisma.AlumniCreateNestedOneWithoutRequestsInput
+  faculty?: Prisma.FacultyCreateNestedOneWithoutRequestsInput
+  currentStep?: Prisma.ApprovalStepCreateNestedOneWithoutCurrentForRequestInput
+  document: Prisma.DocumentCreateNestedOneWithoutRequestsInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutRequestInput
+  approvals?: Prisma.ApprovalCreateNestedManyWithoutRequestInput
+  comments?: Prisma.CommentCreateNestedManyWithoutRequestInput
+}
+
+export type RequestUncheckedCreateWithoutTemplateInput = {
+  id?: number
+  type: string
+  email?: string | null
+  address: string
+  reference_number?: string
+  status?: string
+  pdfUrl?: string | null
+  publicId?: string | null
+  userId?: number | null
+  facultyId?: number | null
+  currentStepId?: number | null
+  documentId: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutRequestInput
+  approvals?: Prisma.ApprovalUncheckedCreateNestedManyWithoutRequestInput
+  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutRequestInput
+}
+
+export type RequestCreateOrConnectWithoutTemplateInput = {
+  where: Prisma.RequestWhereUniqueInput
+  create: Prisma.XOR<Prisma.RequestCreateWithoutTemplateInput, Prisma.RequestUncheckedCreateWithoutTemplateInput>
+}
+
+export type RequestCreateManyTemplateInputEnvelope = {
+  data: Prisma.RequestCreateManyTemplateInput | Prisma.RequestCreateManyTemplateInput[]
+  skipDuplicates?: boolean
+}
+
+export type RequestUpsertWithWhereUniqueWithoutTemplateInput = {
+  where: Prisma.RequestWhereUniqueInput
+  update: Prisma.XOR<Prisma.RequestUpdateWithoutTemplateInput, Prisma.RequestUncheckedUpdateWithoutTemplateInput>
+  create: Prisma.XOR<Prisma.RequestCreateWithoutTemplateInput, Prisma.RequestUncheckedCreateWithoutTemplateInput>
+}
+
+export type RequestUpdateWithWhereUniqueWithoutTemplateInput = {
+  where: Prisma.RequestWhereUniqueInput
+  data: Prisma.XOR<Prisma.RequestUpdateWithoutTemplateInput, Prisma.RequestUncheckedUpdateWithoutTemplateInput>
+}
+
+export type RequestUpdateManyWithWhereWithoutTemplateInput = {
+  where: Prisma.RequestScalarWhereInput
+  data: Prisma.XOR<Prisma.RequestUpdateManyMutationInput, Prisma.RequestUncheckedUpdateManyWithoutTemplateInput>
+}
+
+export type RequestScalarWhereInput = {
+  AND?: Prisma.RequestScalarWhereInput | Prisma.RequestScalarWhereInput[]
+  OR?: Prisma.RequestScalarWhereInput[]
+  NOT?: Prisma.RequestScalarWhereInput | Prisma.RequestScalarWhereInput[]
+  id?: Prisma.IntFilter<"Request"> | number
+  type?: Prisma.StringFilter<"Request"> | string
+  email?: Prisma.StringNullableFilter<"Request"> | string | null
+  address?: Prisma.StringFilter<"Request"> | string
+  reference_number?: Prisma.StringFilter<"Request"> | string
+  status?: Prisma.StringFilter<"Request"> | string
+  pdfUrl?: Prisma.StringNullableFilter<"Request"> | string | null
+  publicId?: Prisma.StringNullableFilter<"Request"> | string | null
+  userId?: Prisma.IntNullableFilter<"Request"> | number | null
+  facultyId?: Prisma.IntNullableFilter<"Request"> | number | null
+  currentStepId?: Prisma.IntNullableFilter<"Request"> | number | null
+  documentId?: Prisma.IntFilter<"Request"> | number
+  templateId?: Prisma.IntNullableFilter<"Request"> | number | null
+  createdAt?: Prisma.DateTimeFilter<"Request"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Request"> | Date | string
+}
+
 export type RequestCreateWithoutUserInput = {
   type: string
   email?: string | null
@@ -842,6 +1000,7 @@ export type RequestCreateWithoutUserInput = {
   faculty?: Prisma.FacultyCreateNestedOneWithoutRequestsInput
   currentStep?: Prisma.ApprovalStepCreateNestedOneWithoutCurrentForRequestInput
   document: Prisma.DocumentCreateNestedOneWithoutRequestsInput
+  template?: Prisma.TemplateCreateNestedOneWithoutRequestsInput
   payments?: Prisma.PaymentCreateNestedManyWithoutRequestInput
   approvals?: Prisma.ApprovalCreateNestedManyWithoutRequestInput
   comments?: Prisma.CommentCreateNestedManyWithoutRequestInput
@@ -859,6 +1018,7 @@ export type RequestUncheckedCreateWithoutUserInput = {
   facultyId?: number | null
   currentStepId?: number | null
   documentId: number
+  templateId?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutRequestInput
@@ -892,26 +1052,6 @@ export type RequestUpdateManyWithWhereWithoutUserInput = {
   data: Prisma.XOR<Prisma.RequestUpdateManyMutationInput, Prisma.RequestUncheckedUpdateManyWithoutUserInput>
 }
 
-export type RequestScalarWhereInput = {
-  AND?: Prisma.RequestScalarWhereInput | Prisma.RequestScalarWhereInput[]
-  OR?: Prisma.RequestScalarWhereInput[]
-  NOT?: Prisma.RequestScalarWhereInput | Prisma.RequestScalarWhereInput[]
-  id?: Prisma.IntFilter<"Request"> | number
-  type?: Prisma.StringFilter<"Request"> | string
-  email?: Prisma.StringNullableFilter<"Request"> | string | null
-  address?: Prisma.StringFilter<"Request"> | string
-  reference_number?: Prisma.StringFilter<"Request"> | string
-  status?: Prisma.StringFilter<"Request"> | string
-  pdfUrl?: Prisma.StringNullableFilter<"Request"> | string | null
-  publicId?: Prisma.StringNullableFilter<"Request"> | string | null
-  userId?: Prisma.IntFilter<"Request"> | number
-  facultyId?: Prisma.IntNullableFilter<"Request"> | number | null
-  currentStepId?: Prisma.IntNullableFilter<"Request"> | number | null
-  documentId?: Prisma.IntFilter<"Request"> | number
-  createdAt?: Prisma.DateTimeFilter<"Request"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"Request"> | Date | string
-}
-
 export type RequestCreateWithoutDocumentInput = {
   type: string
   email?: string | null
@@ -922,9 +1062,10 @@ export type RequestCreateWithoutDocumentInput = {
   publicId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.AlumniCreateNestedOneWithoutRequestsInput
+  user?: Prisma.AlumniCreateNestedOneWithoutRequestsInput
   faculty?: Prisma.FacultyCreateNestedOneWithoutRequestsInput
   currentStep?: Prisma.ApprovalStepCreateNestedOneWithoutCurrentForRequestInput
+  template?: Prisma.TemplateCreateNestedOneWithoutRequestsInput
   payments?: Prisma.PaymentCreateNestedManyWithoutRequestInput
   approvals?: Prisma.ApprovalCreateNestedManyWithoutRequestInput
   comments?: Prisma.CommentCreateNestedManyWithoutRequestInput
@@ -939,9 +1080,10 @@ export type RequestUncheckedCreateWithoutDocumentInput = {
   status?: string
   pdfUrl?: string | null
   publicId?: string | null
-  userId: number
+  userId?: number | null
   facultyId?: number | null
   currentStepId?: number | null
+  templateId?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutRequestInput
@@ -985,9 +1127,10 @@ export type RequestCreateWithoutCurrentStepInput = {
   publicId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.AlumniCreateNestedOneWithoutRequestsInput
+  user?: Prisma.AlumniCreateNestedOneWithoutRequestsInput
   faculty?: Prisma.FacultyCreateNestedOneWithoutRequestsInput
   document: Prisma.DocumentCreateNestedOneWithoutRequestsInput
+  template?: Prisma.TemplateCreateNestedOneWithoutRequestsInput
   payments?: Prisma.PaymentCreateNestedManyWithoutRequestInput
   approvals?: Prisma.ApprovalCreateNestedManyWithoutRequestInput
   comments?: Prisma.CommentCreateNestedManyWithoutRequestInput
@@ -1002,9 +1145,10 @@ export type RequestUncheckedCreateWithoutCurrentStepInput = {
   status?: string
   pdfUrl?: string | null
   publicId?: string | null
-  userId: number
+  userId?: number | null
   facultyId?: number | null
   documentId: number
+  templateId?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutRequestInput
@@ -1048,10 +1192,11 @@ export type RequestCreateWithoutApprovalsInput = {
   publicId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.AlumniCreateNestedOneWithoutRequestsInput
+  user?: Prisma.AlumniCreateNestedOneWithoutRequestsInput
   faculty?: Prisma.FacultyCreateNestedOneWithoutRequestsInput
   currentStep?: Prisma.ApprovalStepCreateNestedOneWithoutCurrentForRequestInput
   document: Prisma.DocumentCreateNestedOneWithoutRequestsInput
+  template?: Prisma.TemplateCreateNestedOneWithoutRequestsInput
   payments?: Prisma.PaymentCreateNestedManyWithoutRequestInput
   comments?: Prisma.CommentCreateNestedManyWithoutRequestInput
 }
@@ -1065,10 +1210,11 @@ export type RequestUncheckedCreateWithoutApprovalsInput = {
   status?: string
   pdfUrl?: string | null
   publicId?: string | null
-  userId: number
+  userId?: number | null
   facultyId?: number | null
   currentStepId?: number | null
   documentId: number
+  templateId?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutRequestInput
@@ -1101,10 +1247,11 @@ export type RequestUpdateWithoutApprovalsInput = {
   publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.AlumniUpdateOneRequiredWithoutRequestsNestedInput
+  user?: Prisma.AlumniUpdateOneWithoutRequestsNestedInput
   faculty?: Prisma.FacultyUpdateOneWithoutRequestsNestedInput
   currentStep?: Prisma.ApprovalStepUpdateOneWithoutCurrentForRequestNestedInput
   document?: Prisma.DocumentUpdateOneRequiredWithoutRequestsNestedInput
+  template?: Prisma.TemplateUpdateOneWithoutRequestsNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutRequestNestedInput
   comments?: Prisma.CommentUpdateManyWithoutRequestNestedInput
 }
@@ -1118,10 +1265,11 @@ export type RequestUncheckedUpdateWithoutApprovalsInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   facultyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   currentStepId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   documentId?: Prisma.IntFieldUpdateOperationsInput | number
+  templateId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutRequestNestedInput
@@ -1138,10 +1286,11 @@ export type RequestCreateWithoutCommentsInput = {
   publicId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.AlumniCreateNestedOneWithoutRequestsInput
+  user?: Prisma.AlumniCreateNestedOneWithoutRequestsInput
   faculty?: Prisma.FacultyCreateNestedOneWithoutRequestsInput
   currentStep?: Prisma.ApprovalStepCreateNestedOneWithoutCurrentForRequestInput
   document: Prisma.DocumentCreateNestedOneWithoutRequestsInput
+  template?: Prisma.TemplateCreateNestedOneWithoutRequestsInput
   payments?: Prisma.PaymentCreateNestedManyWithoutRequestInput
   approvals?: Prisma.ApprovalCreateNestedManyWithoutRequestInput
 }
@@ -1155,10 +1304,11 @@ export type RequestUncheckedCreateWithoutCommentsInput = {
   status?: string
   pdfUrl?: string | null
   publicId?: string | null
-  userId: number
+  userId?: number | null
   facultyId?: number | null
   currentStepId?: number | null
   documentId: number
+  templateId?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutRequestInput
@@ -1191,10 +1341,11 @@ export type RequestUpdateWithoutCommentsInput = {
   publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.AlumniUpdateOneRequiredWithoutRequestsNestedInput
+  user?: Prisma.AlumniUpdateOneWithoutRequestsNestedInput
   faculty?: Prisma.FacultyUpdateOneWithoutRequestsNestedInput
   currentStep?: Prisma.ApprovalStepUpdateOneWithoutCurrentForRequestNestedInput
   document?: Prisma.DocumentUpdateOneRequiredWithoutRequestsNestedInput
+  template?: Prisma.TemplateUpdateOneWithoutRequestsNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutRequestNestedInput
   approvals?: Prisma.ApprovalUpdateManyWithoutRequestNestedInput
 }
@@ -1208,10 +1359,11 @@ export type RequestUncheckedUpdateWithoutCommentsInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   facultyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   currentStepId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   documentId?: Prisma.IntFieldUpdateOperationsInput | number
+  templateId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutRequestNestedInput
@@ -1228,10 +1380,11 @@ export type RequestCreateWithoutPaymentsInput = {
   publicId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.AlumniCreateNestedOneWithoutRequestsInput
+  user?: Prisma.AlumniCreateNestedOneWithoutRequestsInput
   faculty?: Prisma.FacultyCreateNestedOneWithoutRequestsInput
   currentStep?: Prisma.ApprovalStepCreateNestedOneWithoutCurrentForRequestInput
   document: Prisma.DocumentCreateNestedOneWithoutRequestsInput
+  template?: Prisma.TemplateCreateNestedOneWithoutRequestsInput
   approvals?: Prisma.ApprovalCreateNestedManyWithoutRequestInput
   comments?: Prisma.CommentCreateNestedManyWithoutRequestInput
 }
@@ -1245,10 +1398,11 @@ export type RequestUncheckedCreateWithoutPaymentsInput = {
   status?: string
   pdfUrl?: string | null
   publicId?: string | null
-  userId: number
+  userId?: number | null
   facultyId?: number | null
   currentStepId?: number | null
   documentId: number
+  templateId?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   approvals?: Prisma.ApprovalUncheckedCreateNestedManyWithoutRequestInput
@@ -1281,10 +1435,11 @@ export type RequestUpdateWithoutPaymentsInput = {
   publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.AlumniUpdateOneRequiredWithoutRequestsNestedInput
+  user?: Prisma.AlumniUpdateOneWithoutRequestsNestedInput
   faculty?: Prisma.FacultyUpdateOneWithoutRequestsNestedInput
   currentStep?: Prisma.ApprovalStepUpdateOneWithoutCurrentForRequestNestedInput
   document?: Prisma.DocumentUpdateOneRequiredWithoutRequestsNestedInput
+  template?: Prisma.TemplateUpdateOneWithoutRequestsNestedInput
   approvals?: Prisma.ApprovalUpdateManyWithoutRequestNestedInput
   comments?: Prisma.CommentUpdateManyWithoutRequestNestedInput
 }
@@ -1298,10 +1453,11 @@ export type RequestUncheckedUpdateWithoutPaymentsInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   facultyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   currentStepId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   documentId?: Prisma.IntFieldUpdateOperationsInput | number
+  templateId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   approvals?: Prisma.ApprovalUncheckedUpdateManyWithoutRequestNestedInput
@@ -1318,9 +1474,10 @@ export type RequestCreateWithoutFacultyInput = {
   publicId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.AlumniCreateNestedOneWithoutRequestsInput
+  user?: Prisma.AlumniCreateNestedOneWithoutRequestsInput
   currentStep?: Prisma.ApprovalStepCreateNestedOneWithoutCurrentForRequestInput
   document: Prisma.DocumentCreateNestedOneWithoutRequestsInput
+  template?: Prisma.TemplateCreateNestedOneWithoutRequestsInput
   payments?: Prisma.PaymentCreateNestedManyWithoutRequestInput
   approvals?: Prisma.ApprovalCreateNestedManyWithoutRequestInput
   comments?: Prisma.CommentCreateNestedManyWithoutRequestInput
@@ -1335,9 +1492,10 @@ export type RequestUncheckedCreateWithoutFacultyInput = {
   status?: string
   pdfUrl?: string | null
   publicId?: string | null
-  userId: number
+  userId?: number | null
   currentStepId?: number | null
   documentId: number
+  templateId?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutRequestInput
@@ -1371,6 +1529,79 @@ export type RequestUpdateManyWithWhereWithoutFacultyInput = {
   data: Prisma.XOR<Prisma.RequestUpdateManyMutationInput, Prisma.RequestUncheckedUpdateManyWithoutFacultyInput>
 }
 
+export type RequestCreateManyTemplateInput = {
+  id?: number
+  type: string
+  email?: string | null
+  address: string
+  reference_number?: string
+  status?: string
+  pdfUrl?: string | null
+  publicId?: string | null
+  userId?: number | null
+  facultyId?: number | null
+  currentStepId?: number | null
+  documentId: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type RequestUpdateWithoutTemplateInput = {
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  reference_number?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.AlumniUpdateOneWithoutRequestsNestedInput
+  faculty?: Prisma.FacultyUpdateOneWithoutRequestsNestedInput
+  currentStep?: Prisma.ApprovalStepUpdateOneWithoutCurrentForRequestNestedInput
+  document?: Prisma.DocumentUpdateOneRequiredWithoutRequestsNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutRequestNestedInput
+  approvals?: Prisma.ApprovalUpdateManyWithoutRequestNestedInput
+  comments?: Prisma.CommentUpdateManyWithoutRequestNestedInput
+}
+
+export type RequestUncheckedUpdateWithoutTemplateInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  reference_number?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  facultyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  currentStepId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  documentId?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutRequestNestedInput
+  approvals?: Prisma.ApprovalUncheckedUpdateManyWithoutRequestNestedInput
+  comments?: Prisma.CommentUncheckedUpdateManyWithoutRequestNestedInput
+}
+
+export type RequestUncheckedUpdateManyWithoutTemplateInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  reference_number?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  facultyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  currentStepId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  documentId?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
 export type RequestCreateManyUserInput = {
   id?: number
   type: string
@@ -1383,6 +1614,7 @@ export type RequestCreateManyUserInput = {
   facultyId?: number | null
   currentStepId?: number | null
   documentId: number
+  templateId?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1400,6 +1632,7 @@ export type RequestUpdateWithoutUserInput = {
   faculty?: Prisma.FacultyUpdateOneWithoutRequestsNestedInput
   currentStep?: Prisma.ApprovalStepUpdateOneWithoutCurrentForRequestNestedInput
   document?: Prisma.DocumentUpdateOneRequiredWithoutRequestsNestedInput
+  template?: Prisma.TemplateUpdateOneWithoutRequestsNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutRequestNestedInput
   approvals?: Prisma.ApprovalUpdateManyWithoutRequestNestedInput
   comments?: Prisma.CommentUpdateManyWithoutRequestNestedInput
@@ -1417,6 +1650,7 @@ export type RequestUncheckedUpdateWithoutUserInput = {
   facultyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   currentStepId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   documentId?: Prisma.IntFieldUpdateOperationsInput | number
+  templateId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutRequestNestedInput
@@ -1436,6 +1670,7 @@ export type RequestUncheckedUpdateManyWithoutUserInput = {
   facultyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   currentStepId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   documentId?: Prisma.IntFieldUpdateOperationsInput | number
+  templateId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1449,9 +1684,10 @@ export type RequestCreateManyDocumentInput = {
   status?: string
   pdfUrl?: string | null
   publicId?: string | null
-  userId: number
+  userId?: number | null
   facultyId?: number | null
   currentStepId?: number | null
+  templateId?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1466,9 +1702,10 @@ export type RequestUpdateWithoutDocumentInput = {
   publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.AlumniUpdateOneRequiredWithoutRequestsNestedInput
+  user?: Prisma.AlumniUpdateOneWithoutRequestsNestedInput
   faculty?: Prisma.FacultyUpdateOneWithoutRequestsNestedInput
   currentStep?: Prisma.ApprovalStepUpdateOneWithoutCurrentForRequestNestedInput
+  template?: Prisma.TemplateUpdateOneWithoutRequestsNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutRequestNestedInput
   approvals?: Prisma.ApprovalUpdateManyWithoutRequestNestedInput
   comments?: Prisma.CommentUpdateManyWithoutRequestNestedInput
@@ -1483,9 +1720,10 @@ export type RequestUncheckedUpdateWithoutDocumentInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   facultyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   currentStepId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  templateId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutRequestNestedInput
@@ -1502,9 +1740,10 @@ export type RequestUncheckedUpdateManyWithoutDocumentInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   facultyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   currentStepId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  templateId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1518,9 +1757,10 @@ export type RequestCreateManyCurrentStepInput = {
   status?: string
   pdfUrl?: string | null
   publicId?: string | null
-  userId: number
+  userId?: number | null
   facultyId?: number | null
   documentId: number
+  templateId?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1535,9 +1775,10 @@ export type RequestUpdateWithoutCurrentStepInput = {
   publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.AlumniUpdateOneRequiredWithoutRequestsNestedInput
+  user?: Prisma.AlumniUpdateOneWithoutRequestsNestedInput
   faculty?: Prisma.FacultyUpdateOneWithoutRequestsNestedInput
   document?: Prisma.DocumentUpdateOneRequiredWithoutRequestsNestedInput
+  template?: Prisma.TemplateUpdateOneWithoutRequestsNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutRequestNestedInput
   approvals?: Prisma.ApprovalUpdateManyWithoutRequestNestedInput
   comments?: Prisma.CommentUpdateManyWithoutRequestNestedInput
@@ -1552,9 +1793,10 @@ export type RequestUncheckedUpdateWithoutCurrentStepInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   facultyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   documentId?: Prisma.IntFieldUpdateOperationsInput | number
+  templateId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutRequestNestedInput
@@ -1571,9 +1813,10 @@ export type RequestUncheckedUpdateManyWithoutCurrentStepInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   facultyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   documentId?: Prisma.IntFieldUpdateOperationsInput | number
+  templateId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1587,9 +1830,10 @@ export type RequestCreateManyFacultyInput = {
   status?: string
   pdfUrl?: string | null
   publicId?: string | null
-  userId: number
+  userId?: number | null
   currentStepId?: number | null
   documentId: number
+  templateId?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1604,9 +1848,10 @@ export type RequestUpdateWithoutFacultyInput = {
   publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.AlumniUpdateOneRequiredWithoutRequestsNestedInput
+  user?: Prisma.AlumniUpdateOneWithoutRequestsNestedInput
   currentStep?: Prisma.ApprovalStepUpdateOneWithoutCurrentForRequestNestedInput
   document?: Prisma.DocumentUpdateOneRequiredWithoutRequestsNestedInput
+  template?: Prisma.TemplateUpdateOneWithoutRequestsNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutRequestNestedInput
   approvals?: Prisma.ApprovalUpdateManyWithoutRequestNestedInput
   comments?: Prisma.CommentUpdateManyWithoutRequestNestedInput
@@ -1621,9 +1866,10 @@ export type RequestUncheckedUpdateWithoutFacultyInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   currentStepId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   documentId?: Prisma.IntFieldUpdateOperationsInput | number
+  templateId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutRequestNestedInput
@@ -1640,9 +1886,10 @@ export type RequestUncheckedUpdateManyWithoutFacultyInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   currentStepId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   documentId?: Prisma.IntFieldUpdateOperationsInput | number
+  templateId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1709,12 +1956,14 @@ export type RequestSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   facultyId?: boolean
   currentStepId?: boolean
   documentId?: boolean
+  templateId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  user?: boolean | Prisma.AlumniDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.Request$userArgs<ExtArgs>
   faculty?: boolean | Prisma.Request$facultyArgs<ExtArgs>
   currentStep?: boolean | Prisma.Request$currentStepArgs<ExtArgs>
   document?: boolean | Prisma.DocumentDefaultArgs<ExtArgs>
+  template?: boolean | Prisma.Request$templateArgs<ExtArgs>
   payments?: boolean | Prisma.Request$paymentsArgs<ExtArgs>
   approvals?: boolean | Prisma.Request$approvalsArgs<ExtArgs>
   comments?: boolean | Prisma.Request$commentsArgs<ExtArgs>
@@ -1734,12 +1983,14 @@ export type RequestSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   facultyId?: boolean
   currentStepId?: boolean
   documentId?: boolean
+  templateId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  user?: boolean | Prisma.AlumniDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.Request$userArgs<ExtArgs>
   faculty?: boolean | Prisma.Request$facultyArgs<ExtArgs>
   currentStep?: boolean | Prisma.Request$currentStepArgs<ExtArgs>
   document?: boolean | Prisma.DocumentDefaultArgs<ExtArgs>
+  template?: boolean | Prisma.Request$templateArgs<ExtArgs>
 }, ExtArgs["result"]["request"]>
 
 export type RequestSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1755,12 +2006,14 @@ export type RequestSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   facultyId?: boolean
   currentStepId?: boolean
   documentId?: boolean
+  templateId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  user?: boolean | Prisma.AlumniDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.Request$userArgs<ExtArgs>
   faculty?: boolean | Prisma.Request$facultyArgs<ExtArgs>
   currentStep?: boolean | Prisma.Request$currentStepArgs<ExtArgs>
   document?: boolean | Prisma.DocumentDefaultArgs<ExtArgs>
+  template?: boolean | Prisma.Request$templateArgs<ExtArgs>
 }, ExtArgs["result"]["request"]>
 
 export type RequestSelectScalar = {
@@ -1776,41 +2029,46 @@ export type RequestSelectScalar = {
   facultyId?: boolean
   currentStepId?: boolean
   documentId?: boolean
+  templateId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type RequestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "type" | "email" | "address" | "reference_number" | "status" | "pdfUrl" | "publicId" | "userId" | "facultyId" | "currentStepId" | "documentId" | "createdAt" | "updatedAt", ExtArgs["result"]["request"]>
+export type RequestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "type" | "email" | "address" | "reference_number" | "status" | "pdfUrl" | "publicId" | "userId" | "facultyId" | "currentStepId" | "documentId" | "templateId" | "createdAt" | "updatedAt", ExtArgs["result"]["request"]>
 export type RequestInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.AlumniDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.Request$userArgs<ExtArgs>
   faculty?: boolean | Prisma.Request$facultyArgs<ExtArgs>
   currentStep?: boolean | Prisma.Request$currentStepArgs<ExtArgs>
   document?: boolean | Prisma.DocumentDefaultArgs<ExtArgs>
+  template?: boolean | Prisma.Request$templateArgs<ExtArgs>
   payments?: boolean | Prisma.Request$paymentsArgs<ExtArgs>
   approvals?: boolean | Prisma.Request$approvalsArgs<ExtArgs>
   comments?: boolean | Prisma.Request$commentsArgs<ExtArgs>
   _count?: boolean | Prisma.RequestCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type RequestIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.AlumniDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.Request$userArgs<ExtArgs>
   faculty?: boolean | Prisma.Request$facultyArgs<ExtArgs>
   currentStep?: boolean | Prisma.Request$currentStepArgs<ExtArgs>
   document?: boolean | Prisma.DocumentDefaultArgs<ExtArgs>
+  template?: boolean | Prisma.Request$templateArgs<ExtArgs>
 }
 export type RequestIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.AlumniDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.Request$userArgs<ExtArgs>
   faculty?: boolean | Prisma.Request$facultyArgs<ExtArgs>
   currentStep?: boolean | Prisma.Request$currentStepArgs<ExtArgs>
   document?: boolean | Prisma.DocumentDefaultArgs<ExtArgs>
+  template?: boolean | Prisma.Request$templateArgs<ExtArgs>
 }
 
 export type $RequestPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Request"
   objects: {
-    user: Prisma.$AlumniPayload<ExtArgs>
+    user: Prisma.$AlumniPayload<ExtArgs> | null
     faculty: Prisma.$FacultyPayload<ExtArgs> | null
     currentStep: Prisma.$ApprovalStepPayload<ExtArgs> | null
     document: Prisma.$DocumentPayload<ExtArgs>
+    template: Prisma.$TemplatePayload<ExtArgs> | null
     payments: Prisma.$PaymentPayload<ExtArgs>[]
     approvals: Prisma.$ApprovalPayload<ExtArgs>[]
     comments: Prisma.$CommentPayload<ExtArgs>[]
@@ -1824,10 +2082,11 @@ export type $RequestPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     status: string
     pdfUrl: string | null
     publicId: string | null
-    userId: number
+    userId: number | null
     facultyId: number | null
     currentStepId: number | null
     documentId: number
+    templateId: number | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["request"]>
@@ -2224,10 +2483,11 @@ readonly fields: RequestFieldRefs;
  */
 export interface Prisma__RequestClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  user<T extends Prisma.AlumniDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AlumniDefaultArgs<ExtArgs>>): Prisma.Prisma__AlumniClient<runtime.Types.Result.GetResult<Prisma.$AlumniPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  user<T extends Prisma.Request$userArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Request$userArgs<ExtArgs>>): Prisma.Prisma__AlumniClient<runtime.Types.Result.GetResult<Prisma.$AlumniPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   faculty<T extends Prisma.Request$facultyArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Request$facultyArgs<ExtArgs>>): Prisma.Prisma__FacultyClient<runtime.Types.Result.GetResult<Prisma.$FacultyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   currentStep<T extends Prisma.Request$currentStepArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Request$currentStepArgs<ExtArgs>>): Prisma.Prisma__ApprovalStepClient<runtime.Types.Result.GetResult<Prisma.$ApprovalStepPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   document<T extends Prisma.DocumentDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DocumentDefaultArgs<ExtArgs>>): Prisma.Prisma__DocumentClient<runtime.Types.Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  template<T extends Prisma.Request$templateArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Request$templateArgs<ExtArgs>>): Prisma.Prisma__TemplateClient<runtime.Types.Result.GetResult<Prisma.$TemplatePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   payments<T extends Prisma.Request$paymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Request$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   approvals<T extends Prisma.Request$approvalsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Request$approvalsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ApprovalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   comments<T extends Prisma.Request$commentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Request$commentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -2272,6 +2532,7 @@ export interface RequestFieldRefs {
   readonly facultyId: Prisma.FieldRef<"Request", 'Int'>
   readonly currentStepId: Prisma.FieldRef<"Request", 'Int'>
   readonly documentId: Prisma.FieldRef<"Request", 'Int'>
+  readonly templateId: Prisma.FieldRef<"Request", 'Int'>
   readonly createdAt: Prisma.FieldRef<"Request", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Request", 'DateTime'>
 }
@@ -2670,6 +2931,25 @@ export type RequestDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
 }
 
 /**
+ * Request.user
+ */
+export type Request$userArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Alumni
+   */
+  select?: Prisma.AlumniSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Alumni
+   */
+  omit?: Prisma.AlumniOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AlumniInclude<ExtArgs> | null
+  where?: Prisma.AlumniWhereInput
+}
+
+/**
  * Request.faculty
  */
 export type Request$facultyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2705,6 +2985,25 @@ export type Request$currentStepArgs<ExtArgs extends runtime.Types.Extensions.Int
    */
   include?: Prisma.ApprovalStepInclude<ExtArgs> | null
   where?: Prisma.ApprovalStepWhereInput
+}
+
+/**
+ * Request.template
+ */
+export type Request$templateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Template
+   */
+  select?: Prisma.TemplateSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Template
+   */
+  omit?: Prisma.TemplateOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TemplateInclude<ExtArgs> | null
+  where?: Prisma.TemplateWhereInput
 }
 
 /**

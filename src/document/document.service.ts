@@ -1,5 +1,5 @@
 // document.service.ts
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException, ForbiddenException, InternalServerErrorException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateDocumentDto } from './dto/create-document.dto';
 import { UpdateDocumentDto } from './dto/update-document.dto';
@@ -19,8 +19,10 @@ export class DocumentService {
         select: { role: { select: { name: true } } },
       });
 
-      if (!user || !['Super Admin', 'Admin'].includes(user.role?.name || '')) {
-        return { status: 403, message: 'You are not authorized to create documents' };
+      if (!user || !['SUPER ADMIN', 'ADMIN'].includes(user.role?.name || '')) {
+        throw new ForbiddenException(
+          'You are not authorized to create documents',
+        );
       }
 
       // Validate approval chain if provided
@@ -28,10 +30,9 @@ export class DocumentService {
         where: { id: dto.approvalChainId },
       });
       if (!approvalChain) {
-        return {
-          status: 404,
-          message: `Approval chain with ID ${dto.approvalChainId} not found`,
-        };
+        throw new NotFoundException(
+          `Approval chain with ID ${dto.approvalChainId} not found`,
+        );
       }
 
       // Compute total amount
@@ -69,10 +70,7 @@ export class DocumentService {
         data: document,
       };
     } catch (error) {
-      return {
-        status: 500,
-        message: `An error occurred: ${error.message || error}`,
-      };
+      throw new InternalServerErrorException(error);
     }
   }
 
@@ -123,10 +121,7 @@ export class DocumentService {
         data: items,
       };
     } catch (error) {
-      return {
-        status: 500,
-        message: `An error occurred: ${error.message || error}`,
-      };
+      throw new InternalServerErrorException(error);
     }
   }
 
@@ -167,10 +162,7 @@ export class DocumentService {
       });
 
       if (!existingDocument) {
-        return {
-          status: 404,
-          message: `Document ${id} not found`,
-        };
+        throw new NotFoundException(`Document with ID ${id} not found`)
       }
 
       // Prepare update data
@@ -243,22 +235,16 @@ export class DocumentService {
         data: updatedDocument,
       };
     } catch (error) {
-      return {
-        status: 500,
-        message: `An error occurred: ${error.message || error}`,
-      };
+      throw new InternalServerErrorException(error);
     }
   }
-  
+
   async remove(id: number) {
     try {
       const document = await this.prisma.document.findUnique({ where: { id } });
 
       if (!document) {
-        return {
-          status: 404,
-          message: `Document ${id} not fount.`,
-        };
+        throw new NotFoundException(`Document with ID ${id} not found`);
       }
 
       await this.prisma.document.delete({ where: { id } });
@@ -267,10 +253,7 @@ export class DocumentService {
         message: `Document ${id} deleted`,
       };
     } catch (error) {
-      return {
-        status: 500,
-        message: `An error Occured: ${error}`,
-      };
+      throw new InternalServerErrorException(error);
     }
   }
 }
