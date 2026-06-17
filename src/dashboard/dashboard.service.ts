@@ -24,7 +24,7 @@ export class DashboardService {
       this.prisma.request.count(),
       this.prisma.payment.aggregate({
         _sum: { totalAmount: true },
-        where: { status: 'SUCCESS' }
+        where: { status: 'SUCCESSFUL' }
       }),
     ]);
 
