@@ -17,9 +17,9 @@ export async function seedUsers(prisma: PrismaClient) {
     {
       firstname: "Super",
       lastname: "Admin",
-      email: "super.admin@erms.com",
+      email: "super@erms.com",
       password: hashedPassword,
-      roleName: "Super Admin",
+      roleName: "SUPER ADMIN",
       isActive: true
     },
     {
@@ -27,15 +27,23 @@ export async function seedUsers(prisma: PrismaClient) {
       lastname: "Administrator",
       email: "admin@erms.com",
       password: hashedPassword,
-      roleName: "Admin",
+      roleName: "ADMIN",
       isActive: true
     },
     {
       firstname: "Records",
       lastname: "Officer",
-      email: "records.officer@erms.com",
+      email: "records@erms.com",
       password: hashedPassword,
-      roleName: "Record Officer",
+      roleName: "RECORD OFFICER",
+      isActive: true
+    },
+    {
+      firstname: "Records",
+      lastname: "Director",
+      email: "director@erms.com",
+      password: hashedPassword,
+      roleName: "DIRECTOR",
       isActive: true
     }
   ];
@@ -45,7 +53,7 @@ export async function seedUsers(prisma: PrismaClient) {
 
   for (const user of users) {
     const roleId = roleMap.get(user.roleName);
-    
+
     if (!roleId) {
       console.log(`⚠️ Role "${user.roleName}" not found, skipping user ${user.email}`);
       continue;

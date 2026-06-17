@@ -319,6 +319,8 @@ export class RequestService {
               }
             }
           },
+          pdfUrl: true,
+          publicId: true,
           createdAt: true
         }
       });

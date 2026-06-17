@@ -213,28 +213,27 @@ model Approval {
   user   User @relation(fields: [userId], references: [id])
 
   action  String // APPROVE, REJECT
-  comment String?
+  comment Comment?
 
   createdAt DateTime @default(now())
 
-  @@unique([requestId, stepId])
+  @@index([requestId, stepId]) 
   @@index([requestId])
   @@index([userId])
 }
 
 model Comment {
-  id      Int    @id @default(autoincrement())
-  content String
-
-  requestId Int
-  request   Request @relation(fields: [requestId], references: [id], onDelete: Cascade)
-
-  userId Int
-  user   User @relation(fields: [userId], references: [id])
-
-  createdAt DateTime @default(now())
-
-  @@index([requestId])
+  id         Int       @id @default(autoincrement())
+  content    String
+  requestId  Int
+  request    Request   @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  userId     Int
+  user       User      @relation(fields: [userId], references: [id])
+  
+  approvalId Int?      @unique 
+  approval   Approval? @relation(fields: [approvalId], references: [id], onDelete: Cascade)
+  
+  createdAt  DateTime  @default(now())
 }
 
 model Request {

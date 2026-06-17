@@ -8,5 +8,5 @@ export class LoginAlumniDto {
     })
     @IsString()
     @IsNotEmpty()
-    matric_number: string;
+    matric_number!: string;
 }

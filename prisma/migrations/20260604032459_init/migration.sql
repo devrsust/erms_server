@@ -1,4 +1,17 @@
 -- CreateTable
+CREATE TABLE "Template" (
+    "id" SERIAL NOT NULL,
+    "name" TEXT NOT NULL,
+    "content" TEXT,
+    "logo" TEXT,
+    "createdBy" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Template_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "Role" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
@@ -45,6 +58,10 @@ CREATE TABLE "User" (
     "refresh_token" TEXT,
     "refresh_token_expiry" TIMESTAMP(3),
     "last_login" TIMESTAMP(3),
+    "signature" TEXT,
+    "stamp" TEXT,
+    "signaturePublicId" TEXT,
+    "stampPublicId" TEXT,
     "roleId" INTEGER,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -128,10 +145,13 @@ CREATE TABLE "Request" (
     "address" TEXT NOT NULL,
     "reference_number" TEXT NOT NULL,
     "status" TEXT NOT NULL DEFAULT 'PENDING',
-    "userId" INTEGER NOT NULL,
+    "pdfUrl" TEXT,
+    "publicId" TEXT,
+    "userId" INTEGER,
     "facultyId" INTEGER,
     "currentStepId" INTEGER,
     "documentId" INTEGER NOT NULL,
+    "templateId" INTEGER,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -198,6 +218,47 @@ CREATE TABLE "Combo" (
 
     CONSTRAINT "Combo_pkey" PRIMARY KEY ("id")
 );
+
+-- CreateTable
+CREATE TABLE "Activity" (
+    "id" SERIAL NOT NULL,
+    "action" TEXT NOT NULL,
+    "entity" TEXT NOT NULL,
+    "description" TEXT,
+    "actorType" TEXT NOT NULL,
+    "actorId" TEXT,
+    "meta" JSONB,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "Activity_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Upload" (
+    "id" SERIAL NOT NULL,
+    "url" TEXT NOT NULL,
+    "publicId" TEXT,
+    "folder" TEXT NOT NULL,
+    "type" TEXT NOT NULL,
+    "userId" INTEGER,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "Upload_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "_TemplateUsers" (
+    "A" INTEGER NOT NULL,
+    "B" INTEGER NOT NULL,
+
+    CONSTRAINT "_TemplateUsers_AB_pkey" PRIMARY KEY ("A","B")
+);
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Template_name_key" ON "Template"("name");
+
+-- CreateIndex
+CREATE INDEX "Template_name_idx" ON "Template"("name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Role_name_key" ON "Role"("name");
@@ -334,6 +395,24 @@ CREATE UNIQUE INDEX "Combo_matric_number_key" ON "Combo"("matric_number");
 -- CreateIndex
 CREATE UNIQUE INDEX "Combo_certNo_key" ON "Combo"("certNo");
 
+-- CreateIndex
+CREATE INDEX "Activity_entity_idx" ON "Activity"("entity");
+
+-- CreateIndex
+CREATE INDEX "Activity_actorType_idx" ON "Activity"("actorType");
+
+-- CreateIndex
+CREATE INDEX "Activity_actorId_idx" ON "Activity"("actorId");
+
+-- CreateIndex
+CREATE INDEX "Activity_createdAt_idx" ON "Activity"("createdAt");
+
+-- CreateIndex
+CREATE INDEX "_TemplateUsers_B_index" ON "_TemplateUsers"("B");
+
+-- AddForeignKey
+ALTER TABLE "Template" ADD CONSTRAINT "Template_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
 -- AddForeignKey
 ALTER TABLE "Alumni" ADD CONSTRAINT "Alumni_roleId_fkey" FOREIGN KEY ("roleId") REFERENCES "Role"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
@@ -368,7 +447,7 @@ ALTER TABLE "Comment" ADD CONSTRAINT "Comment_requestId_fkey" FOREIGN KEY ("requ
 ALTER TABLE "Comment" ADD CONSTRAINT "Comment_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Request" ADD CONSTRAINT "Request_userId_fkey" FOREIGN KEY ("userId") REFERENCES "Alumni"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Request" ADD CONSTRAINT "Request_userId_fkey" FOREIGN KEY ("userId") REFERENCES "Alumni"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Request" ADD CONSTRAINT "Request_facultyId_fkey" FOREIGN KEY ("facultyId") REFERENCES "Faculty"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -378,6 +457,9 @@ ALTER TABLE "Request" ADD CONSTRAINT "Request_currentStepId_fkey" FOREIGN KEY ("
 
 -- AddForeignKey
 ALTER TABLE "Request" ADD CONSTRAINT "Request_documentId_fkey" FOREIGN KEY ("documentId") REFERENCES "Document"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Request" ADD CONSTRAINT "Request_templateId_fkey" FOREIGN KEY ("templateId") REFERENCES "Template"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Payment" ADD CONSTRAINT "Payment_userId_fkey" FOREIGN KEY ("userId") REFERENCES "Alumni"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -396,3 +478,9 @@ ALTER TABLE "Department" ADD CONSTRAINT "Department_facultyId_fkey" FOREIGN KEY 
 
 -- AddForeignKey
 ALTER TABLE "Combo" ADD CONSTRAINT "Combo_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_TemplateUsers" ADD CONSTRAINT "_TemplateUsers_A_fkey" FOREIGN KEY ("A") REFERENCES "Template"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_TemplateUsers" ADD CONSTRAINT "_TemplateUsers_B_fkey" FOREIGN KEY ("B") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;

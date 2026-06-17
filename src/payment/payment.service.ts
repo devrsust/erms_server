@@ -104,7 +104,7 @@ export class PaymentService {
     } catch (error) {
       console.error("❌ Payment init error:", error);
       throw new HttpException(
-        error?.message || "Failed to initialize payment",
+        error || "Failed to initialize payment",
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }

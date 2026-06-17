@@ -1763,7 +1763,6 @@ export const ApprovalScalarFieldEnum = {
   stepId: 'stepId',
   userId: 'userId',
   action: 'action',
-  comment: 'comment',
   createdAt: 'createdAt'
 } as const
 
@@ -1775,6 +1774,7 @@ export const CommentScalarFieldEnum = {
   content: 'content',
   requestId: 'requestId',
   userId: 'userId',
+  approvalId: 'approvalId',
   createdAt: 'createdAt'
 } as const
 

@@ -5,11 +5,11 @@ export async function seedRoles(prisma: PrismaClient) {
   console.log("Seeding roles...");
   
   const roles = [
-    { name: "Super Admin" },      
-    { name: "Admin" },
-    { name: "Alumni" },
-    { name: "Record Officer" },
-    { name: "Guest" }
+    { name: "SUPER ADMIN" },      
+    { name: "ADMIN" },
+    { name: "ALUMNI" },
+    { name: "RECORD OFFICER" },
+    { name: "DIRECTOR" }
   ];
 
   for (const role of roles) {

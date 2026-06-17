@@ -46,7 +46,6 @@ export type ApprovalMinAggregateOutputType = {
   stepId: number | null
   userId: number | null
   action: string | null
-  comment: string | null
   createdAt: Date | null
 }
 
@@ -56,7 +55,6 @@ export type ApprovalMaxAggregateOutputType = {
   stepId: number | null
   userId: number | null
   action: string | null
-  comment: string | null
   createdAt: Date | null
 }
 
@@ -66,7 +64,6 @@ export type ApprovalCountAggregateOutputType = {
   stepId: number
   userId: number
   action: number
-  comment: number
   createdAt: number
   _all: number
 }
@@ -92,7 +89,6 @@ export type ApprovalMinAggregateInputType = {
   stepId?: true
   userId?: true
   action?: true
-  comment?: true
   createdAt?: true
 }
 
@@ -102,7 +98,6 @@ export type ApprovalMaxAggregateInputType = {
   stepId?: true
   userId?: true
   action?: true
-  comment?: true
   createdAt?: true
 }
 
@@ -112,7 +107,6 @@ export type ApprovalCountAggregateInputType = {
   stepId?: true
   userId?: true
   action?: true
-  comment?: true
   createdAt?: true
   _all?: true
 }
@@ -209,7 +203,6 @@ export type ApprovalGroupByOutputType = {
   stepId: number
   userId: number
   action: string
-  comment: string | null
   createdAt: Date
   _count: ApprovalCountAggregateOutputType | null
   _avg: ApprovalAvgAggregateOutputType | null
@@ -242,11 +235,11 @@ export type ApprovalWhereInput = {
   stepId?: Prisma.IntFilter<"Approval"> | number
   userId?: Prisma.IntFilter<"Approval"> | number
   action?: Prisma.StringFilter<"Approval"> | string
-  comment?: Prisma.StringNullableFilter<"Approval"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Approval"> | Date | string
   request?: Prisma.XOR<Prisma.RequestScalarRelationFilter, Prisma.RequestWhereInput>
   step?: Prisma.XOR<Prisma.ApprovalStepScalarRelationFilter, Prisma.ApprovalStepWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  comment?: Prisma.XOR<Prisma.CommentNullableScalarRelationFilter, Prisma.CommentWhereInput> | null
 }
 
 export type ApprovalOrderByWithRelationInput = {
@@ -255,16 +248,15 @@ export type ApprovalOrderByWithRelationInput = {
   stepId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   action?: Prisma.SortOrder
-  comment?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   request?: Prisma.RequestOrderByWithRelationInput
   step?: Prisma.ApprovalStepOrderByWithRelationInput
   user?: Prisma.UserOrderByWithRelationInput
+  comment?: Prisma.CommentOrderByWithRelationInput
 }
 
 export type ApprovalWhereUniqueInput = Prisma.AtLeast<{
   id?: number
-  requestId_stepId?: Prisma.ApprovalRequestIdStepIdCompoundUniqueInput
   AND?: Prisma.ApprovalWhereInput | Prisma.ApprovalWhereInput[]
   OR?: Prisma.ApprovalWhereInput[]
   NOT?: Prisma.ApprovalWhereInput | Prisma.ApprovalWhereInput[]
@@ -272,12 +264,12 @@ export type ApprovalWhereUniqueInput = Prisma.AtLeast<{
   stepId?: Prisma.IntFilter<"Approval"> | number
   userId?: Prisma.IntFilter<"Approval"> | number
   action?: Prisma.StringFilter<"Approval"> | string
-  comment?: Prisma.StringNullableFilter<"Approval"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Approval"> | Date | string
   request?: Prisma.XOR<Prisma.RequestScalarRelationFilter, Prisma.RequestWhereInput>
   step?: Prisma.XOR<Prisma.ApprovalStepScalarRelationFilter, Prisma.ApprovalStepWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-}, "id" | "requestId_stepId">
+  comment?: Prisma.XOR<Prisma.CommentNullableScalarRelationFilter, Prisma.CommentWhereInput> | null
+}, "id">
 
 export type ApprovalOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -285,7 +277,6 @@ export type ApprovalOrderByWithAggregationInput = {
   stepId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   action?: Prisma.SortOrder
-  comment?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.ApprovalCountOrderByAggregateInput
   _avg?: Prisma.ApprovalAvgOrderByAggregateInput
@@ -303,17 +294,16 @@ export type ApprovalScalarWhereWithAggregatesInput = {
   stepId?: Prisma.IntWithAggregatesFilter<"Approval"> | number
   userId?: Prisma.IntWithAggregatesFilter<"Approval"> | number
   action?: Prisma.StringWithAggregatesFilter<"Approval"> | string
-  comment?: Prisma.StringNullableWithAggregatesFilter<"Approval"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Approval"> | Date | string
 }
 
 export type ApprovalCreateInput = {
   action: string
-  comment?: string | null
   createdAt?: Date | string
   request: Prisma.RequestCreateNestedOneWithoutApprovalsInput
   step: Prisma.ApprovalStepCreateNestedOneWithoutApprovalsInput
   user: Prisma.UserCreateNestedOneWithoutApprovalsInput
+  comment?: Prisma.CommentCreateNestedOneWithoutApprovalInput
 }
 
 export type ApprovalUncheckedCreateInput = {
@@ -322,17 +312,17 @@ export type ApprovalUncheckedCreateInput = {
   stepId: number
   userId: number
   action: string
-  comment?: string | null
   createdAt?: Date | string
+  comment?: Prisma.CommentUncheckedCreateNestedOneWithoutApprovalInput
 }
 
 export type ApprovalUpdateInput = {
   action?: Prisma.StringFieldUpdateOperationsInput | string
-  comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   request?: Prisma.RequestUpdateOneRequiredWithoutApprovalsNestedInput
   step?: Prisma.ApprovalStepUpdateOneRequiredWithoutApprovalsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutApprovalsNestedInput
+  comment?: Prisma.CommentUpdateOneWithoutApprovalNestedInput
 }
 
 export type ApprovalUncheckedUpdateInput = {
@@ -341,8 +331,8 @@ export type ApprovalUncheckedUpdateInput = {
   stepId?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   action?: Prisma.StringFieldUpdateOperationsInput | string
-  comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  comment?: Prisma.CommentUncheckedUpdateOneWithoutApprovalNestedInput
 }
 
 export type ApprovalCreateManyInput = {
@@ -351,13 +341,11 @@ export type ApprovalCreateManyInput = {
   stepId: number
   userId: number
   action: string
-  comment?: string | null
   createdAt?: Date | string
 }
 
 export type ApprovalUpdateManyMutationInput = {
   action?: Prisma.StringFieldUpdateOperationsInput | string
-  comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -367,7 +355,6 @@ export type ApprovalUncheckedUpdateManyInput = {
   stepId?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   action?: Prisma.StringFieldUpdateOperationsInput | string
-  comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -381,18 +368,12 @@ export type ApprovalOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type ApprovalRequestIdStepIdCompoundUniqueInput = {
-  requestId: number
-  stepId: number
-}
-
 export type ApprovalCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   requestId?: Prisma.SortOrder
   stepId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   action?: Prisma.SortOrder
-  comment?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -409,7 +390,6 @@ export type ApprovalMaxOrderByAggregateInput = {
   stepId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   action?: Prisma.SortOrder
-  comment?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -419,7 +399,6 @@ export type ApprovalMinOrderByAggregateInput = {
   stepId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   action?: Prisma.SortOrder
-  comment?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -428,6 +407,11 @@ export type ApprovalSumOrderByAggregateInput = {
   requestId?: Prisma.SortOrder
   stepId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+}
+
+export type ApprovalNullableScalarRelationFilter = {
+  is?: Prisma.ApprovalWhereInput | null
+  isNot?: Prisma.ApprovalWhereInput | null
 }
 
 export type ApprovalCreateNestedManyWithoutUserInput = {
@@ -514,6 +498,22 @@ export type ApprovalUncheckedUpdateManyWithoutStepNestedInput = {
   deleteMany?: Prisma.ApprovalScalarWhereInput | Prisma.ApprovalScalarWhereInput[]
 }
 
+export type ApprovalCreateNestedOneWithoutCommentInput = {
+  create?: Prisma.XOR<Prisma.ApprovalCreateWithoutCommentInput, Prisma.ApprovalUncheckedCreateWithoutCommentInput>
+  connectOrCreate?: Prisma.ApprovalCreateOrConnectWithoutCommentInput
+  connect?: Prisma.ApprovalWhereUniqueInput
+}
+
+export type ApprovalUpdateOneWithoutCommentNestedInput = {
+  create?: Prisma.XOR<Prisma.ApprovalCreateWithoutCommentInput, Prisma.ApprovalUncheckedCreateWithoutCommentInput>
+  connectOrCreate?: Prisma.ApprovalCreateOrConnectWithoutCommentInput
+  upsert?: Prisma.ApprovalUpsertWithoutCommentInput
+  disconnect?: Prisma.ApprovalWhereInput | boolean
+  delete?: Prisma.ApprovalWhereInput | boolean
+  connect?: Prisma.ApprovalWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ApprovalUpdateToOneWithWhereWithoutCommentInput, Prisma.ApprovalUpdateWithoutCommentInput>, Prisma.ApprovalUncheckedUpdateWithoutCommentInput>
+}
+
 export type ApprovalCreateNestedManyWithoutRequestInput = {
   create?: Prisma.XOR<Prisma.ApprovalCreateWithoutRequestInput, Prisma.ApprovalUncheckedCreateWithoutRequestInput> | Prisma.ApprovalCreateWithoutRequestInput[] | Prisma.ApprovalUncheckedCreateWithoutRequestInput[]
   connectOrCreate?: Prisma.ApprovalCreateOrConnectWithoutRequestInput | Prisma.ApprovalCreateOrConnectWithoutRequestInput[]
@@ -558,10 +558,10 @@ export type ApprovalUncheckedUpdateManyWithoutRequestNestedInput = {
 
 export type ApprovalCreateWithoutUserInput = {
   action: string
-  comment?: string | null
   createdAt?: Date | string
   request: Prisma.RequestCreateNestedOneWithoutApprovalsInput
   step: Prisma.ApprovalStepCreateNestedOneWithoutApprovalsInput
+  comment?: Prisma.CommentCreateNestedOneWithoutApprovalInput
 }
 
 export type ApprovalUncheckedCreateWithoutUserInput = {
@@ -569,8 +569,8 @@ export type ApprovalUncheckedCreateWithoutUserInput = {
   requestId: number
   stepId: number
   action: string
-  comment?: string | null
   createdAt?: Date | string
+  comment?: Prisma.CommentUncheckedCreateNestedOneWithoutApprovalInput
 }
 
 export type ApprovalCreateOrConnectWithoutUserInput = {
@@ -608,16 +608,15 @@ export type ApprovalScalarWhereInput = {
   stepId?: Prisma.IntFilter<"Approval"> | number
   userId?: Prisma.IntFilter<"Approval"> | number
   action?: Prisma.StringFilter<"Approval"> | string
-  comment?: Prisma.StringNullableFilter<"Approval"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Approval"> | Date | string
 }
 
 export type ApprovalCreateWithoutStepInput = {
   action: string
-  comment?: string | null
   createdAt?: Date | string
   request: Prisma.RequestCreateNestedOneWithoutApprovalsInput
   user: Prisma.UserCreateNestedOneWithoutApprovalsInput
+  comment?: Prisma.CommentCreateNestedOneWithoutApprovalInput
 }
 
 export type ApprovalUncheckedCreateWithoutStepInput = {
@@ -625,8 +624,8 @@ export type ApprovalUncheckedCreateWithoutStepInput = {
   requestId: number
   userId: number
   action: string
-  comment?: string | null
   createdAt?: Date | string
+  comment?: Prisma.CommentUncheckedCreateNestedOneWithoutApprovalInput
 }
 
 export type ApprovalCreateOrConnectWithoutStepInput = {
@@ -655,12 +654,62 @@ export type ApprovalUpdateManyWithWhereWithoutStepInput = {
   data: Prisma.XOR<Prisma.ApprovalUpdateManyMutationInput, Prisma.ApprovalUncheckedUpdateManyWithoutStepInput>
 }
 
+export type ApprovalCreateWithoutCommentInput = {
+  action: string
+  createdAt?: Date | string
+  request: Prisma.RequestCreateNestedOneWithoutApprovalsInput
+  step: Prisma.ApprovalStepCreateNestedOneWithoutApprovalsInput
+  user: Prisma.UserCreateNestedOneWithoutApprovalsInput
+}
+
+export type ApprovalUncheckedCreateWithoutCommentInput = {
+  id?: number
+  requestId: number
+  stepId: number
+  userId: number
+  action: string
+  createdAt?: Date | string
+}
+
+export type ApprovalCreateOrConnectWithoutCommentInput = {
+  where: Prisma.ApprovalWhereUniqueInput
+  create: Prisma.XOR<Prisma.ApprovalCreateWithoutCommentInput, Prisma.ApprovalUncheckedCreateWithoutCommentInput>
+}
+
+export type ApprovalUpsertWithoutCommentInput = {
+  update: Prisma.XOR<Prisma.ApprovalUpdateWithoutCommentInput, Prisma.ApprovalUncheckedUpdateWithoutCommentInput>
+  create: Prisma.XOR<Prisma.ApprovalCreateWithoutCommentInput, Prisma.ApprovalUncheckedCreateWithoutCommentInput>
+  where?: Prisma.ApprovalWhereInput
+}
+
+export type ApprovalUpdateToOneWithWhereWithoutCommentInput = {
+  where?: Prisma.ApprovalWhereInput
+  data: Prisma.XOR<Prisma.ApprovalUpdateWithoutCommentInput, Prisma.ApprovalUncheckedUpdateWithoutCommentInput>
+}
+
+export type ApprovalUpdateWithoutCommentInput = {
+  action?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  request?: Prisma.RequestUpdateOneRequiredWithoutApprovalsNestedInput
+  step?: Prisma.ApprovalStepUpdateOneRequiredWithoutApprovalsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutApprovalsNestedInput
+}
+
+export type ApprovalUncheckedUpdateWithoutCommentInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  requestId?: Prisma.IntFieldUpdateOperationsInput | number
+  stepId?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  action?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
 export type ApprovalCreateWithoutRequestInput = {
   action: string
-  comment?: string | null
   createdAt?: Date | string
   step: Prisma.ApprovalStepCreateNestedOneWithoutApprovalsInput
   user: Prisma.UserCreateNestedOneWithoutApprovalsInput
+  comment?: Prisma.CommentCreateNestedOneWithoutApprovalInput
 }
 
 export type ApprovalUncheckedCreateWithoutRequestInput = {
@@ -668,8 +717,8 @@ export type ApprovalUncheckedCreateWithoutRequestInput = {
   stepId: number
   userId: number
   action: string
-  comment?: string | null
   createdAt?: Date | string
+  comment?: Prisma.CommentUncheckedCreateNestedOneWithoutApprovalInput
 }
 
 export type ApprovalCreateOrConnectWithoutRequestInput = {
@@ -703,16 +752,15 @@ export type ApprovalCreateManyUserInput = {
   requestId: number
   stepId: number
   action: string
-  comment?: string | null
   createdAt?: Date | string
 }
 
 export type ApprovalUpdateWithoutUserInput = {
   action?: Prisma.StringFieldUpdateOperationsInput | string
-  comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   request?: Prisma.RequestUpdateOneRequiredWithoutApprovalsNestedInput
   step?: Prisma.ApprovalStepUpdateOneRequiredWithoutApprovalsNestedInput
+  comment?: Prisma.CommentUpdateOneWithoutApprovalNestedInput
 }
 
 export type ApprovalUncheckedUpdateWithoutUserInput = {
@@ -720,8 +768,8 @@ export type ApprovalUncheckedUpdateWithoutUserInput = {
   requestId?: Prisma.IntFieldUpdateOperationsInput | number
   stepId?: Prisma.IntFieldUpdateOperationsInput | number
   action?: Prisma.StringFieldUpdateOperationsInput | string
-  comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  comment?: Prisma.CommentUncheckedUpdateOneWithoutApprovalNestedInput
 }
 
 export type ApprovalUncheckedUpdateManyWithoutUserInput = {
@@ -729,7 +777,6 @@ export type ApprovalUncheckedUpdateManyWithoutUserInput = {
   requestId?: Prisma.IntFieldUpdateOperationsInput | number
   stepId?: Prisma.IntFieldUpdateOperationsInput | number
   action?: Prisma.StringFieldUpdateOperationsInput | string
-  comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -738,16 +785,15 @@ export type ApprovalCreateManyStepInput = {
   requestId: number
   userId: number
   action: string
-  comment?: string | null
   createdAt?: Date | string
 }
 
 export type ApprovalUpdateWithoutStepInput = {
   action?: Prisma.StringFieldUpdateOperationsInput | string
-  comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   request?: Prisma.RequestUpdateOneRequiredWithoutApprovalsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutApprovalsNestedInput
+  comment?: Prisma.CommentUpdateOneWithoutApprovalNestedInput
 }
 
 export type ApprovalUncheckedUpdateWithoutStepInput = {
@@ -755,8 +801,8 @@ export type ApprovalUncheckedUpdateWithoutStepInput = {
   requestId?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   action?: Prisma.StringFieldUpdateOperationsInput | string
-  comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  comment?: Prisma.CommentUncheckedUpdateOneWithoutApprovalNestedInput
 }
 
 export type ApprovalUncheckedUpdateManyWithoutStepInput = {
@@ -764,7 +810,6 @@ export type ApprovalUncheckedUpdateManyWithoutStepInput = {
   requestId?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   action?: Prisma.StringFieldUpdateOperationsInput | string
-  comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -773,16 +818,15 @@ export type ApprovalCreateManyRequestInput = {
   stepId: number
   userId: number
   action: string
-  comment?: string | null
   createdAt?: Date | string
 }
 
 export type ApprovalUpdateWithoutRequestInput = {
   action?: Prisma.StringFieldUpdateOperationsInput | string
-  comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   step?: Prisma.ApprovalStepUpdateOneRequiredWithoutApprovalsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutApprovalsNestedInput
+  comment?: Prisma.CommentUpdateOneWithoutApprovalNestedInput
 }
 
 export type ApprovalUncheckedUpdateWithoutRequestInput = {
@@ -790,8 +834,8 @@ export type ApprovalUncheckedUpdateWithoutRequestInput = {
   stepId?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   action?: Prisma.StringFieldUpdateOperationsInput | string
-  comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  comment?: Prisma.CommentUncheckedUpdateOneWithoutApprovalNestedInput
 }
 
 export type ApprovalUncheckedUpdateManyWithoutRequestInput = {
@@ -799,7 +843,6 @@ export type ApprovalUncheckedUpdateManyWithoutRequestInput = {
   stepId?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   action?: Prisma.StringFieldUpdateOperationsInput | string
-  comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -811,11 +854,11 @@ export type ApprovalSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   stepId?: boolean
   userId?: boolean
   action?: boolean
-  comment?: boolean
   createdAt?: boolean
   request?: boolean | Prisma.RequestDefaultArgs<ExtArgs>
   step?: boolean | Prisma.ApprovalStepDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  comment?: boolean | Prisma.Approval$commentArgs<ExtArgs>
 }, ExtArgs["result"]["approval"]>
 
 export type ApprovalSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -824,7 +867,6 @@ export type ApprovalSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   stepId?: boolean
   userId?: boolean
   action?: boolean
-  comment?: boolean
   createdAt?: boolean
   request?: boolean | Prisma.RequestDefaultArgs<ExtArgs>
   step?: boolean | Prisma.ApprovalStepDefaultArgs<ExtArgs>
@@ -837,7 +879,6 @@ export type ApprovalSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   stepId?: boolean
   userId?: boolean
   action?: boolean
-  comment?: boolean
   createdAt?: boolean
   request?: boolean | Prisma.RequestDefaultArgs<ExtArgs>
   step?: boolean | Prisma.ApprovalStepDefaultArgs<ExtArgs>
@@ -850,15 +891,15 @@ export type ApprovalSelectScalar = {
   stepId?: boolean
   userId?: boolean
   action?: boolean
-  comment?: boolean
   createdAt?: boolean
 }
 
-export type ApprovalOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "requestId" | "stepId" | "userId" | "action" | "comment" | "createdAt", ExtArgs["result"]["approval"]>
+export type ApprovalOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "requestId" | "stepId" | "userId" | "action" | "createdAt", ExtArgs["result"]["approval"]>
 export type ApprovalInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   request?: boolean | Prisma.RequestDefaultArgs<ExtArgs>
   step?: boolean | Prisma.ApprovalStepDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  comment?: boolean | Prisma.Approval$commentArgs<ExtArgs>
 }
 export type ApprovalIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   request?: boolean | Prisma.RequestDefaultArgs<ExtArgs>
@@ -877,6 +918,7 @@ export type $ApprovalPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     request: Prisma.$RequestPayload<ExtArgs>
     step: Prisma.$ApprovalStepPayload<ExtArgs>
     user: Prisma.$UserPayload<ExtArgs>
+    comment: Prisma.$CommentPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -884,7 +926,6 @@ export type $ApprovalPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     stepId: number
     userId: number
     action: string
-    comment: string | null
     createdAt: Date
   }, ExtArgs["result"]["approval"]>
   composites: {}
@@ -1283,6 +1324,7 @@ export interface Prisma__ApprovalClient<T, Null = never, ExtArgs extends runtime
   request<T extends Prisma.RequestDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RequestDefaultArgs<ExtArgs>>): Prisma.Prisma__RequestClient<runtime.Types.Result.GetResult<Prisma.$RequestPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   step<T extends Prisma.ApprovalStepDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ApprovalStepDefaultArgs<ExtArgs>>): Prisma.Prisma__ApprovalStepClient<runtime.Types.Result.GetResult<Prisma.$ApprovalStepPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  comment<T extends Prisma.Approval$commentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Approval$commentArgs<ExtArgs>>): Prisma.Prisma__CommentClient<runtime.Types.Result.GetResult<Prisma.$CommentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1317,7 +1359,6 @@ export interface ApprovalFieldRefs {
   readonly stepId: Prisma.FieldRef<"Approval", 'Int'>
   readonly userId: Prisma.FieldRef<"Approval", 'Int'>
   readonly action: Prisma.FieldRef<"Approval", 'String'>
-  readonly comment: Prisma.FieldRef<"Approval", 'String'>
   readonly createdAt: Prisma.FieldRef<"Approval", 'DateTime'>
 }
     
@@ -1712,6 +1753,25 @@ export type ApprovalDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * Limit how many Approvals to delete.
    */
   limit?: number
+}
+
+/**
+ * Approval.comment
+ */
+export type Approval$commentArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Comment
+   */
+  select?: Prisma.CommentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Comment
+   */
+  omit?: Prisma.CommentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CommentInclude<ExtArgs> | null
+  where?: Prisma.CommentWhereInput
 }
 
 /**

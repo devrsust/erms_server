@@ -6,7 +6,7 @@ export class CreateApprovalDto {
   @IsInt()
   requestId: number;
 
-  @ApiProperty({ description: 'ID of the Admin Processing the request'})
+  @ApiProperty({ description: 'ID of the Admin Processing the request' })
   @IsInt()
   adminId: number;
 
@@ -30,4 +30,13 @@ export class CreateApprovalDto {
   @IsString()
   @IsOptional()
   comment?: string;
+
+  @IsString()
+  @IsOptional()
+  pdfUrl?: string;
+
+  @IsString()
+  @IsOptional()
+  publicId?: string;
+
 }
