@@ -111,34 +111,52 @@ export class PaymentService {
 
   }
 
-  async findAll() {
+  async findAll(page: number = 1, limit: number = 10) {
     try {
-      const payments = await this.prisma.payment.findMany({
-        select: {
-          id: true,
-          transaction_id: true,
-          totalAmount: true,
-          status: true,
-          user: {
-            select: {
-              id: true,
-              matric_number: true,
-              email: true
-            }
+      // Calculate skip offset
+      const skip = (page - 1) * limit;
+
+      // Execute list retrieval and overall row counting concurrently
+      const [payments, total] = await Promise.all([
+        this.prisma.payment.findMany({
+          skip,
+          take: limit,
+          orderBy: {
+            createdAt: 'desc', // Ensures newest transactions appear first
           },
-          createdAt: true
-        }
-      })
+          select: {
+            id: true,
+            transaction_id: true,
+            totalAmount: true,
+            status: true,
+            user: {
+              select: {
+                id: true,
+                matric_number: true,
+                email: true
+              }
+            },
+            createdAt: true
+          }
+        }),
+        this.prisma.payment.count()
+      ]);
 
       return {
         status: 200,
-        data: payments
-      }
+        data: payments,
+        meta: {
+          total,
+          page,
+          limit,
+          totalPages: Math.ceil(total / limit)
+        }
+      };
     } catch (error) {
       return {
         status: 500,
-        message: `An error occured ${error}`
-      }
+        message: `An error occurred: ${error}`
+      };
     }
   }
 

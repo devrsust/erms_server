@@ -90,47 +90,65 @@ export class RequestService {
     }
   }
 
-  async findAll() {
+  async findAll(page: number = 1, limit: number = 10) {
     try {
-      const requests = await this.prisma.request.findMany({
-        select: {
-          id: true,
-          status: true,
-          reference_number: true,
-          user: {
-            select: {
-              id: true,
-              matric_number: true,
-              email: true
-            }
+      // Calculate how many records to skip
+      const skip = (page - 1) * limit;
+
+      // Run both queries concurrently to keep performance snappy
+      const [requests, total] = await Promise.all([
+        this.prisma.request.findMany({
+          skip,
+          take: limit,
+          orderBy: {
+            createdAt: 'desc', // Ensures newest requests show up first
           },
-          document: {
-            select: {
-              id: true,
-              title: true,
-              totalAmount: true,
-            }
-          },
-          payments: {
-            select: {
-              id: true,
-              status: true,
-              reference: true
-            }
-          },
-          createdAt: true
-        }
-      })
+          select: {
+            id: true,
+            status: true,
+            reference_number: true,
+            user: {
+              select: {
+                id: true,
+                matric_number: true,
+                email: true
+              }
+            },
+            document: {
+              select: {
+                id: true,
+                title: true,
+                totalAmount: true,
+              }
+            },
+            payments: {
+              select: {
+                id: true,
+                status: true,
+                reference: true
+              }
+            },
+            createdAt: true
+          }
+        }),
+        this.prisma.request.count()
+      ]);
 
       return {
         status: 200,
-        data: requests
-      }
+        data: requests,
+        meta: {
+          total,
+          page,
+          limit,
+          totalPages: Math.ceil(total / limit)
+        }
+      };
     } catch (error) {
       return {
-        stattus: 500,
-        message: `An error occured ${error}`
-      }
+        status: 500, // Fixed the typo here from 'stattus'
+        message: `An error occurred: ${error}`
+      };
     }
   }
 

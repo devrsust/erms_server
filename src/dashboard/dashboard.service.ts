@@ -68,7 +68,7 @@ export class DashboardService {
         where: { userId }
       }),
       this.prisma.request.count({
-        where: { userId, status: 'COMPLETED' }
+        where: { userId, status: 'APPROVED' }
       }),
       this.prisma.request.count({
         where: {
@@ -80,7 +80,7 @@ export class DashboardService {
         _sum: { totalAmount: true },
         where: {
           userId,
-          status: 'SUCCESS'
+          status: 'SUCCESSFUL'
         }
       }),
     ]);
